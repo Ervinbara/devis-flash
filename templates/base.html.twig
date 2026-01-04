@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DevisFlash - Générateur de devis PDF{% endblock %}</title>
+    
+    {{ encore_entry_link_tags('app') }}
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ path('home') }}" class="logo">⚡ DevisFlash</a>
+            <ul class="nav-links">
+                <li><a href="{{ path('quote_new') }}">Créer un devis</a></li>
+                <li><a href="{{ path('pricing') }}">Tarifs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ "now"|date("Y") }} DevisFlash - Tous droits réservés</p>
+            <ul class="footer-links">
+                <li><a href="{{ path('legal_mentions') }}">Mentions légales</a></li>
+                <li><a href="{{ path('legal_privacy') }}">Confidentialité</a></li>
+                <li><a href="{{ path('legal_cgv') }}">CGV</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    {{ encore_entry_script_tags('app') }}
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

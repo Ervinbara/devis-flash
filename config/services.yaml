@@ -1,0 +1,30 @@
+# config/services.yaml
+parameters:
+    devisflash.free_limit: '%env(int:DEVISFLASH_FREE_LIMIT)%'
+    devisflash.watermark_enabled: '%env(bool:DEVISFLASH_WATERMARK_ENABLED)%'
+    devisflash.watermark_text: '%env(DEVISFLASH_WATERMARK_TEXT)%'
+    devisflash.tmp_dir: '%kernel.project_dir%/var/tmp/pdf'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Service de génération PDF
+    App\Service\PdfGenerator:
+        arguments:
+            $tmpDir: '%devisflash.tmp_dir%'
+            $watermarkEnabled: '%devisflash.watermark_enabled%'
+            $watermarkText: '%devisflash.watermark_text%'
+
+    # Service de limitation
+    App\Service\QuoteLimiter:
+        arguments:
+            $freeLimit: '%devisflash.free_limit%'

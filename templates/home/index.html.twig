@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevisFlash - Créez un devis professionnel en 60 secondes{% endblock %}
+
+{% block body %}
+<section class="hero">
+    <div class="container">
+        <h1>⚡ Créez un devis professionnel<br>en moins de 60 secondes</h1>
+        <p class="hero-subtitle">
+            Générez des devis PDF propres et crédibles sans Word ni Excel.<br>
+            Simple, rapide, efficace.
+        </p>
+        
+        <div class="hero-features">
+            <div class="feature">
+                <span class="feature-icon">📄</span>
+                <h3>PDF professionnel</h3>
+                <p>Mise en page sobre et crédible</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🧮</span>
+                <h3>Calculs automatiques</h3>
+                <p>HT, TVA, TTC calculés pour vous</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">⚡</span>
+                <h3>Ultra rapide</h3>
+                <p>Moins de 2 minutes chrono</p>
+            </div>
+        </div>
+
+        <a href="{{ path('quote_new') }}" class="btn-hero">
+            Créer mon devis gratuitement
+        </a>
+        
+        <p class="hero-note">✨ 2 devis gratuits par jour · Sans inscription</p>
+    </div>
+</section>
+
+<section class="section-how">
+    <div class="container">
+        <h2>Comment ça marche ?</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Remplissez le formulaire</h3>
+                <p>Vos infos, client, et lignes de devis</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Cliquez sur "Télécharger"</h3>
+                <p>Le PDF se génère instantanément</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Envoyez à votre client</h3>
+                <p>Document prêt à être signé !</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-cta">
+    <div class="container">
+        <h2>Prêt à gagner du temps ?</h2>
+        <p>Créez votre premier devis maintenant, c'est gratuit !</p>
+        <a href="{{ path('quote_new') }}" class="btn-primary btn-large">
+            Créer mon devis
+        </a>
+    </div>
+</section>
+{% endblock %}

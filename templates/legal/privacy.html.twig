@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité - DevisFlash{% endblock %}
+
+{% block body %}
+<div class="container" style="max-width: 800px; padding: 3rem 2rem;">
+    <h1>Politique de confidentialité</h1>
+    
+    <section style="margin-top: 2rem;">
+        <h2>Collecte des données</h2>
+        <p>
+            DevisFlash collecte uniquement les données strictement nécessaires au fonctionnement du service :
+        </p>
+        <ul>
+            <li>Informations saisies dans les formulaires de devis (entreprise, client, prestations)</li>
+            <li>Cookies techniques pour la limitation du nombre de devis gratuits</li>
+            <li>Données de paiement (traitées par Stripe, notre prestataire de paiement sécurisé)</li>
+        </ul>
+    </section>
+
+    <section style="margin-top: 2rem;">
+        <h2>Utilisation des données</h2>
+        <p>
+            Vos données sont utilisées uniquement pour :
+        </p>
+        <ul>
+            <li>Générer les devis PDF demandés</li>
+            <li>Gérer votre abonnement (si applicable)</li>
+            <li>Améliorer notre service</li>
+        </ul>
+        <p>
+            <strong>Nous ne vendons ni ne partageons vos données avec des tiers.</strong>
+        </p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+        <h2>Conservation des données</h2>
+        <p>
+            En version gratuite (stateless), aucune donnée n'est conservée après la génération du PDF.
+            En version Pro, vos devis sont conservés tant que votre compte est actif.
+        </p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+        <h2>Vos droits</h2>
+        <p>
+            Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression 
+            et d'opposition au traitement de vos données personnelles.
+        </p>
+        <p>
+            Pour exercer ces droits, contactez-nous à : contact@devisflash.com
+        </p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+        <h2>Cookies</h2>
+        <p>
+            Nous utilisons uniquement des cookies techniques essentiels au fonctionnement du site 
+            (limitation des devis gratuits). Aucun cookie publicitaire ou de tracking n'est utilisé.
+        </p>
+    </section>
+</div>
+{% endblock %}

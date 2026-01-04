@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un devis - DevisFlash{% endblock %}
+
+{% block body %}
+<div class="container form-container">
+    <div class="form-header">
+        <h1>📄 Nouveau devis</h1>
+        <div class="quota-info">
+            <span class="quota-badge">
+                {{ remaining }} / {{ limit }} devis gratuits restants aujourd'hui
+            </span>
+        </div>
+    </div>
+
+    {{ form_start(form, {'attr': {'class': 'quote-form', 'id': 'quoteForm'}}) }}
+    
+    {# Section Entreprise #}
+    <div class="form-section">
+        <h2 class="section-title">🏢 Votre entreprise</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                {{ form_label(form.companyName) }}
+                {{ form_widget(form.companyName) }}
+                {{ form_errors(form.companyName) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.companyContact) }}
+                {{ form_widget(form.companyContact) }}
+                {{ form_errors(form.companyContact) }}
+            </div>
+            <div class="form-group full-width">
+                {{ form_label(form.companyAddress) }}
+                {{ form_widget(form.companyAddress) }}
+                {{ form_errors(form.companyAddress) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.companyEmail) }}
+                {{ form_widget(form.companyEmail) }}
+                {{ form_errors(form.companyEmail) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.companyPhone) }}
+                {{ form_widget(form.companyPhone) }}
+                {{ form_errors(form.companyPhone) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.companySiret) }}
+                {{ form_widget(form.companySiret) }}
+                {{ form_errors(form.companySiret) }}
+            </div>
+        </div>
+    </div>
+
+    {# Section Client #}
+    <div class="form-section">
+        <h2 class="section-title">👤 Votre client</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                {{ form_label(form.clientName) }}
+                {{ form_widget(form.clientName) }}
+                {{ form_errors(form.clientName) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.clientCompany) }}
+                {{ form_widget(form.clientCompany) }}
+                {{ form_errors(form.clientCompany) }}
+            </div>
+            <div class="form-group full-width">
+                {{ form_label(form.clientAddress) }}
+                {{ form_widget(form.clientAddress) }}
+                {{ form_errors(form.clientAddress) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.clientEmail) }}
+                {{ form_widget(form.clientEmail) }}
+                {{ form_errors(form.clientEmail) }}
+            </div>
+        </div>
+    </div>
+
+    {# Section Devis #}
+    <div class="form-section">
+        <h2 class="section-title">📋 Informations du devis</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                {{ form_label(form.quoteNumber) }}
+                {{ form_widget(form.quoteNumber) }}
+                {{ form_errors(form.quoteNumber) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.quoteDate) }}
+                {{ form_widget(form.quoteDate) }}
+                {{ form_errors(form.quoteDate) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.quoteValidUntil) }}
+                {{ form_widget(form.quoteValidUntil) }}
+                {{ form_errors(form.quoteValidUntil) }}
+            </div>
+            <div class="form-group full-width">
+                {{ form_label(form.quoteDescription) }}
+                {{ form_widget(form.quoteDescription) }}
+                {{ form_errors(form.quoteDescription) }}
+            </div>
+        </div>
+    </div>
+
+    {# Section Items #}
+    <div class="form-section">
+        <h2 class="section-title">📦 Lignes de devis</h2>
+        
+        <div id="items-container" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}" data-index="{{ form.items|length }}">
+            {% for item in form.items %}
+                <div class="item-row">
+                    <div class="item-fields">
+                        <div class="form-group item-label">
+                            {{ form_widget(item.label) }}
+                            {{ form_errors(item.label) }}
+                        </div>
+                        <div class="form-group item-quantity">
+                            {{ form_widget(item.quantity) }}
+                            {{ form_errors(item.quantity) }}
+                        </div>
+                        <div class="form-group item-price">
+                            {{ form_widget(item.unitPriceHt) }}
+                            {{ form_errors(item.unitPriceHt) }}
+                        </div>
+                    </div>
+                    <button type="button" class="btn-remove-item" onclick="removeItem(this)">🗑️</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn-add-item" onclick="addItem()">
+            ➕ Ajouter une ligne
+        </button>
+
+        <div class="totals-preview" id="totalsPreview">
+            <div class="total-line">
+                <span>Total HT :</span>
+                <span id="totalHt">0,00 €</span>
+            </div>
+            <div class="total-line">
+                <span>TVA (<span id="vatRateDisplay">20</span>%) :</span>
+                <span id="vatAmount">0,00 €</span>
+            </div>
+            <div class="total-line total-ttc">
+                <span>Total TTC :</span>
+                <span id="totalTtc">0,00 €</span>
+            </div>
+        </div>
+    </div>
+
+    {# Section TVA et conditions #}
+    <div class="form-section">
+        <h2 class="section-title">💶 TVA et conditions</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                {{ form_label(form.vatRate) }}
+                {{ form_widget(form.vatRate) }}
+                {{ form_errors(form.vatRate) }}
+            </div>
+            <div class="form-group full-width">
+                {{ form_label(form.paymentTerms) }}
+                {{ form_widget(form.paymentTerms) }}
+                {{ form_errors(form.paymentTerms) }}
+            </div>
+        </div>
+    </div>
+
+    {# Submit #}
+    <div class="form-actions">
+        {{ form_widget(form.submit) }}
+        <p class="form-note">
+            ✨ Version gratuite avec watermark<br>
+            <a href="{{ path('pricing') }}">Passer au plan Pro</a> pour supprimer le watermark
+        </p>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{# Le script quote-form.js est maintenant chargé via app.js #}
+{% endblock %}

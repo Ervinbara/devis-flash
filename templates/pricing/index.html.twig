@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tarifs - DevisFlash{% endblock %}
+
+{% block body %}
+<div class="container pricing-container">
+    <h1 class="pricing-title">💎 Tarifs</h1>
+    <p class="pricing-subtitle">Choisissez la formule qui vous convient</p>
+
+    <div class="pricing-grid">
+        {# Plan Gratuit #}
+        <div class="pricing-card">
+            <div class="plan-header">
+                <h3>Gratuit</h3>
+                <div class="plan-price">
+                    <span class="price">0€</span>
+                    <span class="period">/mois</span>
+                </div>
+            </div>
+            <ul class="plan-features">
+                <li>✅ 2 devis par jour</li>
+                <li>✅ PDF professionnel</li>
+                <li>✅ Calculs automatiques</li>
+                <li>⚠️ Watermark "DevisFlash"</li>
+                <li>❌ Pas d'historique</li>
+                <li>❌ Pas de personnalisation</li>
+            </ul>
+            <a href="{{ path('quote_new') }}" class="btn-plan">
+                Commencer gratuitement
+            </a>
+        </div>
+
+        {# Plan Pro #}
+        <div class="pricing-card pricing-card-featured">
+            <div class="badge-popular">Le plus populaire</div>
+            <div class="plan-header">
+                <h3>Pro</h3>
+                <div class="plan-price">
+                    <span class="price">9€</span>
+                    <span class="period">/mois</span>
+                </div>
+            </div>
+            <ul class="plan-features">
+                <li>✅ Devis illimités</li>
+                <li>✅ Sans watermark</li>
+                <li>✅ Historique des devis</li>
+                <li>✅ Templates personnalisables</li>
+                <li>✅ Support prioritaire</li>
+                <li>✅ Export Excel</li>
+            </ul>
+            <a href="#" class="btn-plan btn-plan-pro" onclick="alert('Paiement Stripe - À venir !'); return false;">
+                Passer Pro maintenant
+            </a>
+            <p class="plan-note">Disponible prochainement</p>
+        </div>
+
+        {# Plan Pack #}
+        <div class="pricing-card">
+            <div class="plan-header">
+                <h3>Pack 10 devis</h3>
+                <div class="plan-price">
+                    <span class="price">5€</span>
+                    <span class="period">one-time</span>
+                </div>
+            </div>
+            <ul class="plan-features">
+                <li>✅ 10 devis sans watermark</li>
+                <li>✅ Valable 6 mois</li>
+                <li>✅ Pas d'abonnement</li>
+                <li>❌ Pas d'historique</li>
+                <li>❌ Pas de personnalisation</li>
+            </ul>
+            <a href="#" class="btn-plan" onclick="alert('Paiement Stripe - À venir !'); return false;">
+                Acheter le pack
+            </a>
+            <p class="plan-note">Disponible prochainement</p>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2>Questions fréquentes</h2>
+        
+        <div class="faq-item">
+            <h4>❓ Puis-je vraiment créer 2 devis gratuits par jour ?</h4>
+            <p>Oui ! Aucune carte bancaire requise. Parfait pour tester le service.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>❓ Le watermark est-il très visible ?</h4>
+            <p>Non, c'est une mention discrète en bas de page "Généré avec DevisFlash".</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>❓ Puis-je annuler l'abonnement Pro ?</h4>
+            <p>Oui, à tout moment. Aucun engagement.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>❓ Les devis sont-ils conformes légalement ?</h4>
+            <p>Oui, ils contiennent toutes les mentions essentielles. Vous restez responsable du contenu.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
