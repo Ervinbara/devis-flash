@@ -53,7 +53,7 @@ class Quote
     private ?string $quoteDescription = null;
 
     #[Assert\NotBlank(message: 'Le taux de TVA est obligatoire')]
-    #[Assert\Choice(choices: [0, 5.5, 10, 20], message: 'Taux de TVA invalide')]
+    #[Assert\Choice(choices: [0.0, 5.5, 10.0, 20.0], message: 'Taux de TVA invalide')]
     private ?float $vatRate = 20.0;
 
     private ?string $paymentTerms = 'Paiement à réception de facture. Règlement par virement bancaire.';

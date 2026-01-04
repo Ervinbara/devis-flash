@@ -122,10 +122,10 @@ class QuoteType extends AbstractType
             ->add('vatRate', ChoiceType::class, [
                 'label' => 'Taux de TVA *',
                 'choices' => [
-                    'Non assujetti (0%)' => 0,
+                    'Non assujetti (0%)' => 0.0,
                     'Réduit (5,5%)' => 5.5,
-                    'Intermédiaire (10%)' => 10,
-                    'Normal (20%)' => 20,
+                    'Intermédiaire (10%)' => 10.0,
+                    'Normal (20%)' => 20.0,
                 ],
                 'attr' => ['class' => 'form-input']
             ])
