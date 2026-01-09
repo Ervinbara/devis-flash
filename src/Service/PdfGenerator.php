@@ -96,16 +96,48 @@ class PdfGenerator
         $pdf->SetFillColor($colors['primary'][0], $colors['primary'][1], $colors['primary'][2]);
         $pdf->Rect(0, 0, 210, 40, 'F');
         
-        // Texte blanc
+        // Logo à gauche si présent
+        if ($quote->getCompanyLogo() && file_exists($quote->getCompanyLogo())) {
+            try {
+                // Afficher le logo (max 30mm de largeur)
+                $pdf->Image(
+                    $quote->getCompanyLogo(),
+                    15,      // X
+                    8,       // Y
+                    25,      // Largeur max
+                    0,       // Hauteur auto
+                    '',      // Type auto-détecté
+                    '',
+                    '',
+                    true,    // Resize
+                    300,     // DPI
+                    '',
+                    false,
+                    false,
+                    0,
+                    false,
+                    false,
+                    false
+                );
+            } catch (\Exception $e) {
+                // Si erreur, afficher le texte à la place
+                $pdf->SetTextColor(255, 255, 255);
+                $pdf->SetFont('helvetica', 'B', 32);
+                $pdf->SetXY(15, 10);
+                $pdf->Cell(0, 10, 'DEVIS', 0, 1, 'L');
+            }
+        } else {
+            // Pas de logo : afficher "DEVIS" en grand à gauche
+            $pdf->SetTextColor(255, 255, 255);
+            $pdf->SetFont('helvetica', 'B', 32);
+            $pdf->SetXY(15, 10);
+            $pdf->Cell(0, 10, 'DEVIS', 0, 1, 'L');
+        }
+        
+        // Informations à droite (toujours présentes)
         $pdf->SetTextColor(255, 255, 255);
-        
-        // DEVIS en grand
-        $pdf->SetFont('helvetica', 'B', 32);
-        $pdf->SetXY(15, 10);
-        $pdf->Cell(0, 10, 'DEVIS', 0, 1, 'L');
-        
-        // Informations à droite
         $pdf->SetFont('helvetica', '', 11);
+        
         $pdf->SetXY(120, 12);
         $pdf->Cell(70, 5, 'N° ' . $quote->getQuoteNumber(), 0, 1, 'R');
         

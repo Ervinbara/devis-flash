@@ -28,3 +28,8 @@ services:
     App\Service\QuoteLimiter:
         arguments:
             $freeLimit: '%devisflash.free_limit%'
+
+    # Authenticator
+    App\Security\FormLoginAuthenticator:
+        arguments:
+            $urlGenerator: '@router'

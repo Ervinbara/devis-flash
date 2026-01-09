@@ -118,6 +118,21 @@ class QuoteType extends AbstractType
                 'attr' => ['class' => 'items-collection']
             ])
 
+            // Template PDF
+            ->add('pdfTemplate', ChoiceType::class, [
+                'label' => 'Style du PDF',
+                'mapped' => false,
+                'required' => false,
+                'data' => 'modern',
+                'choices' => [
+                    '🎨 Modern (Violet)' => 'modern',
+                    '💼 Corporate (Bleu marine)' => 'corporate',
+                    '🚀 Creative (Orange)' => 'creative',
+                ],
+                'expanded' => true,
+                'attr' => ['class' => 'template-choice']
+            ])
+
             // TVA et conditions
             ->add('vatRate', ChoiceType::class, [
                 'label' => 'Taux de TVA *',

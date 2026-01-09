@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    {{ form_start(form, {'attr': {'class': 'quote-form', 'id': 'quoteForm'}}) }}
+    {{ form_start(form, {'attr': {'class': 'quote-form', 'id': 'quoteForm', 'enctype': 'multipart/form-data'}}) }}
     
     {# Section Entreprise #}
     <div class="form-section">
@@ -48,6 +48,12 @@
                 {{ form_label(form.companySiret) }}
                 {{ form_widget(form.companySiret) }}
                 {{ form_errors(form.companySiret) }}
+            </div>
+            <div class="form-group full-width">
+                {{ form_label(form.companyLogo) }}
+                {{ form_widget(form.companyLogo) }}
+                {{ form_errors(form.companyLogo) }}
+                <small class="file-upload-hint">Format JPG ou PNG, max 2Mo. Votre logo apparaîtra dans le header du PDF.</small>
             </div>
         </div>
     </div>

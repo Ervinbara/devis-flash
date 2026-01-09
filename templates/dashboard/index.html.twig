@@ -1,0 +1,361 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - DevisFlash{% endblock %}
+
+{% block body %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>📊 Tableau de bord</h1>
+        <p>Bonjour {{ app.user.firstName }} !</p>
+    </div>
+
+    {# Flash messages #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {# Statistiques #}
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.totalQuotes }}</div>
+                <div class="stat-label">Devis créés</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.totalHt|number_format(2, ',', ' ') }} €</div>
+                <div class="stat-label">Total HT</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                {% if app.user.isPro %}
+                    ⭐
+                {% else %}
+                    🆓
+                {% endif %}
+            </div>
+            <div class="stat-content">
+                <div class="stat-value">
+                    {% if app.user.isPro %}
+                        Pro
+                    {% else %}
+                        Gratuit
+                    {% endif %}
+                </div>
+                <div class="stat-label">Abonnement</div>
+            </div>
+        </div>
+    </div>
+
+    {# Actions rapides #}
+    <div class="quick-actions">
+        <a href="{{ path('quote_new') }}" class="btn-primary">
+            ➕ Nouveau devis
+        </a>
+        {% if not app.user.isPro %}
+            <a href="{{ path('pricing') }}" class="btn-secondary">
+                ⭐ Passer Pro
+            </a>
+        {% endif %}
+    </div>
+
+    {# Liste des devis #}
+    <div class="quotes-section">
+        <h2>Mes devis</h2>
+
+        {% if quotes|length > 0 %}
+            <div class="quotes-table-container">
+                <table class="quotes-table">
+                    <thead>
+                        <tr>
+                            <th>N° Devis</th>
+                            <th>Client</th>
+                            <th>Date</th>
+                            <th>Total HT</th>
+                            <th>Total TTC</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quote in quotes %}
+                            <tr>
+                                <td class="quote-number">{{ quote.quoteNumber }}</td>
+                                <td>
+                                    <div class="client-info">
+                                        <strong>{{ quote.clientName }}</strong>
+                                        {% if quote.clientCompany %}
+                                            <small>{{ quote.clientCompany }}</small>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ quote.createdAt|date('d/m/Y') }}</td>
+                                <td class="amount">{{ quote.totalHt|number_format(2, ',', ' ') }} €</td>
+                                <td class="amount total">{{ quote.totalTtc|number_format(2, ',', ' ') }} €</td>
+                                <td class="actions">
+                                    <a href="{{ path('dashboard_quote_download', {id: quote.id}) }}" 
+                                       class="btn-action btn-download" 
+                                       title="Télécharger">
+                                        📥
+                                    </a>
+                                    <a href="{{ path('dashboard_quote_duplicate', {id: quote.id}) }}" 
+                                       class="btn-action btn-duplicate" 
+                                       title="Dupliquer">
+                                        📋
+                                    </a>
+                                    <form method="post" 
+                                          action="{{ path('dashboard_quote_delete', {id: quote.id}) }}" 
+                                          style="display: inline;"
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quote.id) }}">
+                                        <button type="submit" 
+                                                class="btn-action btn-delete" 
+                                                title="Supprimer">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📄</div>
+                <h3>Aucun devis pour le moment</h3>
+                <p>Créez votre premier devis pour le voir apparaître ici !</p>
+                <a href="{{ path('quote_new') }}" class="btn-primary">
+                    Créer mon premier devis
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+/* Alertes */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background: #d1fae5;
+    border: 1px solid #10b981;
+    color: #065f46;
+}
+
+/* Statistiques */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Actions rapides */
+.quick-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Section devis */
+.quotes-section h2 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+}
+
+/* Table */
+.quotes-table-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.quotes-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.quotes-table thead {
+    background: #f9fafb;
+}
+
+.quotes-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.quotes-table td {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.quote-number {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #4f46e5;
+}
+
+.client-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.client-info small {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.amount {
+    font-weight: 600;
+    color: #374151;
+}
+
+.amount.total {
+    color: #059669;
+    font-size: 1.05rem;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    background: #f3f4f6;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-download:hover {
+    background: #dbeafe;
+}
+
+.btn-duplicate:hover {
+    background: #fef3c7;
+}
+
+.btn-delete:hover {
+    background: #fee2e2;
+}
+
+/* État vide */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quotes-table-container {
+        overflow-x: auto;
+    }
+
+    .quotes-table {
+        min-width: 800px;
+    }
+}
+</style>
+{% endblock %}
