@@ -629,24 +629,24 @@ body {
     .hero h1 {
         font-size: 2rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1rem;
     }
-    
+
     .form-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .item-fields {
         grid-template-columns: 1fr;
     }
-    
+
     .footer .container {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .nav-links {
         gap: 1rem;
     }
@@ -779,4 +779,61 @@ label[for$="companyLogo"] {
 label[for$="companyLogo"]::before {
     content: "🖼️";
     font-size: 1.2rem;
+}
+/* ===================================
+   NAVBAR - Styles supplémentaires
+   =================================== */
+
+/* Utilisateur connecté */
+.nav-user {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: var(--gray-100);
+    border-radius: 8px;
+    font-weight: 500;
+    color: var(--gray-800);
+}
+
+.nav-dashboard {
+    font-weight: 600;
+    color: var(--primary) !important;
+}
+
+.nav-dashboard:hover {
+    color: var(--primary-dark) !important;
+}
+
+.nav-logout {
+    color: var(--danger) !important;
+}
+
+.nav-logout:hover {
+    opacity: 0.8;
+}
+
+.nav-login {
+    font-weight: 500;
+}
+
+.btn-nav-register {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-nav-register:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-user {
+        display: none;
+    }
 }

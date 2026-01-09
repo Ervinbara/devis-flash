@@ -4,48 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}DevisFlash - Générateur de devis PDF{% endblock %}</title>
-    
+
     {{ encore_entry_link_tags('app') }}
     {% block stylesheets %}{% endblock %}
-            {{ encore_entry_link_tags('app') }}
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="{{ path('home') }}" class="logo">⚡ DevisFlash</a>
-            <ul class="nav-links">
-                <li><a href="{{ path('quote_new') }}">Créer un devis</a></li>
-                <li><a href="{{ path('pricing') }}">Tarifs</a></li>
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar">
+    <div class="container">
+        <a href="{{ path('home') }}" class="logo">⚡ DevisFlash</a>
+        <ul class="nav-links">
+            <li><a href="{{ path('quote_new') }}">Créer un devis</a></li>
+            <li><a href="{{ path('pricing') }}">Tarifs</a></li>
 
-    <main>
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            {% if app.user %}
+                {# Utilisateur connecté #}
+                <li><a href="{{ path('dashboard') }}" class="nav-dashboard">📊 Dashboard</a></li>
+                <li>
+                    <span class="nav-user">👤 {{ app.user.firstName }}</span>
+                </li>
+                <li><a href="{{ path('app_logout') }}" class="nav-logout">Déconnexion</a></li>
+            {% else %}
+                {# Utilisateur non connecté #}
+                <li><a href="{{ path('app_login') }}" class="nav-login">Connexion</a></li>
+                <li><a href="{{ path('app_register') }}" class="btn-nav-register">S'inscrire</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<main>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
         {% endfor %}
+    {% endfor %}
 
-        {% block body %}{% endblock %}
-    </main>
+    {% block body %}{% endblock %}
+</main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; {{ "now"|date("Y") }} DevisFlash - Tous droits réservés</p>
-            <ul class="footer-links">
-                <li><a href="{{ path('legal_mentions') }}">Mentions légales</a></li>
-                <li><a href="{{ path('legal_privacy') }}">Confidentialité</a></li>
-                <li><a href="{{ path('legal_cgv') }}">CGV</a></li>
-            </ul>
-        </div>
-    </footer>
+<footer class="footer">
+    <div class="container">
+        <p>&copy; {{ "now"|date("Y") }} DevisFlash - Tous droits réservés</p>
+        <ul class="footer-links">
+            <li><a href="{{ path('legal_mentions') }}">Mentions légales</a></li>
+            <li><a href="{{ path('legal_privacy') }}">Confidentialité</a></li>
+            <li><a href="{{ path('legal_cgv') }}">CGV</a></li>
+        </ul>
+    </div>
+</footer>
 
-    {{ encore_entry_script_tags('app') }}
-    {% block javascripts %}{% endblock %}
-            {{ encore_entry_script_tags('app') }}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+{{ encore_entry_script_tags('app') }}
+{% block javascripts %}{% endblock %}
 </body>
 </html>

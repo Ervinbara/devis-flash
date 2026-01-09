@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Quote;
+use App\Entity\QuoteItem;
+use App\Form\QuoteType;
 use App\Repository\QuoteRepository;
 use App\Service\PdfGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -142,5 +147,31 @@ class DashboardController extends AbstractController
         }
 
         return $this->redirectToRoute('dashboard');
+    }
+
+    #[Route('/dashboard/quote/{id}/email-data', name: 'dashboard_quote_email_data', methods: ['GET'])]
+    public function getEmailData(int $id, QuoteRepository $quoteRepository): JsonResponse
+    {
+        $quote = $quoteRepository->find($id);
+
+        if (!$quote) {
+            return new JsonResponse(['error' => 'Devis non trouvé'], 404);
+        }
+
+        // Vérifier que le devis appartient à l'utilisateur
+        if ($quote->getUser() !== $this->getUser()) {
+            return new JsonResponse(['error' => 'Accès refusé'], 403);
+        }
+
+        // Préparer les données pour l'email
+        $data = [
+            'clientEmail' => $quote->getClientEmail() ?? '',
+            'clientName' => $quote->getClientName() ?? 'Client',
+            'quoteNumber' => $quote->getQuoteNumber() ?? 'N/A',
+            'companyName' => $quote->getCompanyName() ?? 'Votre entreprise',
+            'downloadUrl' => $this->generateUrl('dashboard_quote_download', ['id' => $quote->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+        ];
+
+        return new JsonResponse($data);
     }
 }

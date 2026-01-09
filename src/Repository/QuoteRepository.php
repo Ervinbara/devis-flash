@@ -57,7 +57,7 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return $result ?? 0.0;
+        return $result !== null ? (float) $result : 0.0;
     }
 
     /**
