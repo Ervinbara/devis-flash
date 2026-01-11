@@ -148,6 +148,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            min-height: calc(100vh - 200px); /* Force le contenu à être plus haut */
         }
 
         .dashboard-header {
@@ -431,8 +432,22 @@
         async function sendQuoteByEmail(quoteId) {
             try {
                 // 1. Récupérer les données du devis
-                const response = await fetch(`/dashboard/quote/${quoteId}/email-data`);
+                console.log('Fetching email data for quote:', quoteId);
+                const url = `/dashboard/quote/${quoteId}/email-data`;
+                console.log('URL:', url);
+
+                const response = await fetch(url);
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    showToast(`❌ Erreur ${response.status}: ${errorText}`, 'error');
+                    return;
+                }
+
                 const data = await response.json();
+                console.log('Email data:', data);
 
                 if (!data.clientEmail) {
                     showToast('❌ Aucun email client renseigné dans ce devis', 'error');
@@ -466,8 +481,8 @@ ${data.companyName}
                 }, 1000);
 
             } catch (error) {
-                console.error('Erreur:', error);
-                showToast('❌ Erreur lors de la préparation de l\'email', 'error');
+                console.error('Erreur complète:', error);
+                showToast('❌ Erreur: ' + error.message, 'error');
             }
         }
     </script>

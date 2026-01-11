@@ -3,61 +3,214 @@
 {% block title %}Politique de confidentialité - DevisFlash{% endblock %}
 
 {% block body %}
-<div class="container" style="max-width: 800px; padding: 3rem 2rem;">
-    <h1>Politique de confidentialité</h1>
-    
-    <section style="margin-top: 2rem;">
-        <h2>Collecte des données</h2>
-        <p>
-            DevisFlash collecte uniquement les données strictement nécessaires au fonctionnement du service :
-        </p>
-        <ul>
-            <li>Informations saisies dans les formulaires de devis (entreprise, client, prestations)</li>
-            <li>Cookies techniques pour la limitation du nombre de devis gratuits</li>
-            <li>Données de paiement (traitées par Stripe, notre prestataire de paiement sécurisé)</li>
-        </ul>
-    </section>
+    <div class="legal-page">
+        <div class="container">
+            <h1>🔒 Politique de confidentialité</h1>
 
-    <section style="margin-top: 2rem;">
-        <h2>Utilisation des données</h2>
-        <p>
-            Vos données sont utilisées uniquement pour :
-        </p>
-        <ul>
-            <li>Générer les devis PDF demandés</li>
-            <li>Gérer votre abonnement (si applicable)</li>
-            <li>Améliorer notre service</li>
-        </ul>
-        <p>
-            <strong>Nous ne vendons ni ne partageons vos données avec des tiers.</strong>
-        </p>
-    </section>
+            <section class="legal-section">
+                <h2>1. Introduction</h2>
+                <p>DevisFlash s'engage à protéger vos données personnelles conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés.</p>
+                <p>Cette politique explique quelles données nous collectons, pourquoi, et comment nous les utilisons.</p>
+            </section>
 
-    <section style="margin-top: 2rem;">
-        <h2>Conservation des données</h2>
-        <p>
-            En version gratuite (stateless), aucune donnée n'est conservée après la génération du PDF.
-            En version Pro, vos devis sont conservés tant que votre compte est actif.
-        </p>
-    </section>
+            <section class="legal-section">
+                <h2>2. Responsable du traitement</h2>
+                <p><strong>Responsable :</strong> BARA Ervin</p>
+                <p><strong>Email :</strong> contact@devisflash.app</p>
+            </section>
 
-    <section style="margin-top: 2rem;">
-        <h2>Vos droits</h2>
-        <p>
-            Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression 
-            et d'opposition au traitement de vos données personnelles.
-        </p>
-        <p>
-            Pour exercer ces droits, contactez-nous à : contact@devisflash.com
-        </p>
-    </section>
+            <section class="legal-section">
+                <h2>3. Données collectées</h2>
+                <h3>3.1. Lors de la création de compte</h3>
+                <ul>
+                    <li>Prénom et nom</li>
+                    <li>Adresse email</li>
+                    <li>Mot de passe (chiffré)</li>
+                    <li>Date de création du compte</li>
+                </ul>
 
-    <section style="margin-top: 2rem;">
-        <h2>Cookies</h2>
-        <p>
-            Nous utilisons uniquement des cookies techniques essentiels au fonctionnement du site 
-            (limitation des devis gratuits). Aucun cookie publicitaire ou de tracking n'est utilisé.
-        </p>
-    </section>
-</div>
+                <h3>3.2. Lors de la création de devis</h3>
+                <ul>
+                    <li>Informations de votre entreprise (nom, adresse, SIRET, etc.)</li>
+                    <li>Informations de vos clients (nom, adresse, email)</li>
+                    <li>Contenu des devis (produits, prix, descriptions)</li>
+                    <li>Logo de votre entreprise (si uploadé)</li>
+                </ul>
+
+                <h3>3.3. Données techniques</h3>
+                <ul>
+                    <li>Adresse IP</li>
+                    <li>Type de navigateur</li>
+                    <li>Pages visitées</li>
+                    <li>Date et heure de connexion</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>4. Utilisation des données</h2>
+                <p>Nous utilisons vos données pour :</p>
+                <ul>
+                    <li>✅ Créer et gérer votre compte</li>
+                    <li>✅ Générer vos devis PDF</li>
+                    <li>✅ Sauvegarder votre historique de devis</li>
+                    <li>✅ Améliorer nos services</li>
+                    <li>✅ Vous envoyer des emails transactionnels (confirmation d'inscription, notifications)</li>
+                    <li>✅ Assurer la sécurité de notre service</li>
+                </ul>
+                <p><strong>Nous ne vendons JAMAIS vos données à des tiers.</strong></p>
+            </section>
+
+            <section class="legal-section">
+                <h2>5. Base légale</h2>
+                <p>Le traitement de vos données repose sur :</p>
+                <ul>
+                    <li>Votre <strong>consentement</strong> (création de compte)</li>
+                    <li>L'<strong>exécution du contrat</strong> (fourniture du service)</li>
+                    <li>Nos <strong>intérêts légitimes</strong> (amélioration du service, sécurité)</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>6. Durée de conservation</h2>
+                <ul>
+                    <li><strong>Compte actif :</strong> Tant que vous utilisez le service</li>
+                    <li><strong>Compte inactif :</strong> 3 ans après la dernière connexion</li>
+                    <li><strong>Devis :</strong> Conservation tant que le compte existe</li>
+                    <li><strong>Logs techniques :</strong> 12 mois maximum</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>7. Vos droits</h2>
+                <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+                <ul>
+                    <li>✅ <strong>Droit d'accès :</strong> Obtenir une copie de vos données</li>
+                    <li>✅ <strong>Droit de rectification :</strong> Corriger des données inexactes</li>
+                    <li>✅ <strong>Droit à l'effacement :</strong> Supprimer votre compte et vos données</li>
+                    <li>✅ <strong>Droit d'opposition :</strong> Vous opposer à certains traitements</li>
+                    <li>✅ <strong>Droit à la portabilité :</strong> Récupérer vos données dans un format structuré</li>
+                    <li>✅ <strong>Droit de limitation :</strong> Limiter le traitement de vos données</li>
+                </ul>
+                <p><strong>Pour exercer vos droits :</strong> Envoyez un email à <a href="mailto:contact@devisflash.app">contact@devisflash.app</a></p>
+                <p>Nous répondrons dans un délai de <strong>30 jours maximum</strong>.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>8. Sécurité</h2>
+                <p>Nous mettons en œuvre des mesures techniques et organisationnelles pour protéger vos données :</p>
+                <ul>
+                    <li>🔒 Chiffrement HTTPS (SSL/TLS)</li>
+                    <li>🔒 Mots de passe hashés (Bcrypt)</li>
+                    <li>🔒 Accès restreint aux données (connexion requise)</li>
+                    <li>🔒 Serveurs sécurisés</li>
+                    <li>🔒 Sauvegardes régulières</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>9. Cookies</h2>
+                <p>Nous utilisons uniquement des <strong>cookies techniques</strong> nécessaires au fonctionnement du site :</p>
+                <ul>
+                    <li>Cookie de session (vous maintenir connecté)</li>
+                    <li>Cookie de préférences (langue, thème)</li>
+                </ul>
+                <p><strong>Aucun cookie publicitaire ou de tracking.</strong></p>
+            </section>
+
+            <section class="legal-section">
+                <h2>10. Transfert de données</h2>
+                <p>Vos données sont hébergées en <strong>Union Européenne</strong> (conformément au RGPD).</p>
+                <p>Nous ne transférons pas vos données hors de l'UE, sauf si nécessaire pour le service (ex: CDN, infrastructure cloud) et uniquement avec des garanties appropriées.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>11. Modifications</h2>
+                <p>Nous pouvons mettre à jour cette politique de confidentialité. En cas de modification importante, nous vous en informerons par email.</p>
+                <p>Dernière mise à jour : <strong>{{ "now"|date("d/m/Y") }}</strong></p>
+            </section>
+
+            <section class="legal-section">
+                <h2>12. Contact & Réclamation</h2>
+                <p><strong>Questions ou réclamations :</strong> <a href="mailto:contact@devisflash.app">contact@devisflash.app</a></p>
+                <p><strong>Autorité de contrôle (CNIL) :</strong> Si vous estimez que vos droits ne sont pas respectés, vous pouvez déposer une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank">www.cnil.fr</a>).</p>
+            </section>
+
+            <p class="legal-date">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+        </div>
+    </div>
+
+    <style>
+        .legal-page {
+            min-height: 80vh;
+            padding: 3rem 0;
+            background: #f9fafb;
+        }
+
+        .legal-page .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .legal-page h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .legal-section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .legal-section h2 {
+            font-size: 1.5rem;
+            color: #4f46e5;
+            margin-bottom: 1rem;
+        }
+
+        .legal-section h3 {
+            font-size: 1.2rem;
+            color: #1f2937;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .legal-section p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .legal-section ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .legal-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .legal-section a {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        .legal-section a:hover {
+            color: #4338ca;
+        }
+
+        .legal-date {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 3rem;
+        }
+    </style>
 {% endblock %}

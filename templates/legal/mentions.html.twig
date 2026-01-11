@@ -3,42 +3,117 @@
 {% block title %}Mentions légales - DevisFlash{% endblock %}
 
 {% block body %}
-<div class="container" style="max-width: 800px; padding: 3rem 2rem;">
-    <h1>Mentions légales</h1>
-    
-    <section style="margin-top: 2rem;">
-        <h2>Éditeur du site</h2>
-        <p>
-            DevisFlash<br>
-            [Adresse]<br>
-            [Ville, Code postal]<br>
-            Email : contact@devisflash.com
-        </p>
-    </section>
+    <div class="legal-page">
+        <div class="container">
+            <h1>⚖️ Mentions légales</h1>
 
-    <section style="margin-top: 2rem;">
-        <h2>Hébergement</h2>
-        <p>
-            [Nom de l'hébergeur]<br>
-            [Adresse]
-        </p>
-    </section>
+            <section class="legal-section">
+                <h2>1. Éditeur du site</h2>
+                <p><strong>Nom de l'entreprise :</strong> BARA Ervin</p>
+                <p><strong>Forme juridique :</strong> Entrepreneur individuel</p>
+                <p><strong>SIREN :</strong> 833 057 532</p>
+                <p><strong>SIRET :</strong> 833 057 532 00028</p>
+                <p><strong>Adresse :</strong> 8 Place Saint Denis, 93200 Saint-Denis</p>
+                <p><strong>Email :</strong> contact@devisflash.app</p>
+                <p><strong>Directeur de publication :</strong> Ervin BARA</p>
+            </section>
 
-    <section style="margin-top: 2rem;">
-        <h2>Propriété intellectuelle</h2>
-        <p>
-            L'ensemble du contenu de ce site (textes, images, vidéos) est protégé par le droit d'auteur.
-            Toute reproduction, même partielle, est interdite sans autorisation préalable.
-        </p>
-    </section>
+            <section class="legal-section">
+                <h2>2. Hébergement</h2>
+                <p><strong>Hébergeur :</strong> OVH SAS</p>
+                <p><strong>Adresse :</strong> 2 rue Kellermann, 59100 Roubaix, France</p>
+                <p><strong>Téléphone :</strong> 1007</p>
+            </section>
 
-    <section style="margin-top: 2rem;">
-        <h2>Responsabilité</h2>
-        <p>
-            DevisFlash met tout en œuvre pour fournir un service de qualité. Toutefois, nous ne pouvons 
-            garantir l'exactitude absolue des informations et des documents générés. L'utilisateur reste 
-            seul responsable du contenu de ses devis.
-        </p>
-    </section>
-</div>
+            <section class="legal-section">
+                <h2>3. Propriété intellectuelle</h2>
+                <p>L'ensemble du contenu de ce site (textes, images, logos, mise en page) est la propriété exclusive de DevisFlash, sauf mention contraire.</p>
+                <p>Toute reproduction, distribution, modification ou utilisation sans autorisation préalable est interdite et constituerait une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>4. Données personnelles</h2>
+                <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition aux données vous concernant.</p>
+                <p>Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@devisflash.app">contact@devisflash.app</a></p>
+                <p>Pour plus d'informations, consultez notre <a href="{{ path('legal_privacy') }}">Politique de confidentialité</a>.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>5. Cookies</h2>
+                <p>Ce site utilise des cookies techniques nécessaires à son fonctionnement (session utilisateur, préférences).</p>
+                <p>Vous pouvez désactiver les cookies dans les paramètres de votre navigateur.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>6. Limitation de responsabilité</h2>
+                <p>DevisFlash met tout en œuvre pour fournir un service de qualité. Toutefois, nous ne pouvons garantir l'absence d'erreurs ou d'interruptions du service.</p>
+                <p>L'utilisateur est seul responsable de l'utilisation qu'il fait des devis générés et des informations qu'il y inscrit.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>7. Contact</h2>
+                <p>Pour toute question concernant ces mentions légales, contactez-nous :</p>
+                <p>Email : <a href="mailto:contact@devisflash.app">contact@devisflash.app</a></p>
+            </section>
+
+            <p class="legal-date">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+        </div>
+    </div>
+
+    <style>
+        .legal-page {
+            min-height: 80vh;
+            padding: 3rem 0;
+            background: #f9fafb;
+        }
+
+        .legal-page .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .legal-page h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .legal-section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .legal-section h2 {
+            font-size: 1.5rem;
+            color: #4f46e5;
+            margin-bottom: 1rem;
+        }
+
+        .legal-section p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .legal-section a {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        .legal-section a:hover {
+            color: #4338ca;
+        }
+
+        .legal-date {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 3rem;
+        }
+    </style>
 {% endblock %}

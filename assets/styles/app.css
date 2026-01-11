@@ -831,6 +831,10 @@ label[for$="companyLogo"]::before {
     box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
+main.main-content > * {
+    min-height: calc(100vh - 250px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .nav-user {
