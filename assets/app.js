@@ -1,3 +1,4 @@
+import './bootstrap.js';
 /*
  * DevisFlash - Application principale
  */

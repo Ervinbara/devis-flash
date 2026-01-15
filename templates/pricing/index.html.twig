@@ -3,102 +3,598 @@
 {% block title %}Tarifs - DevisFlash{% endblock %}
 
 {% block body %}
-<div class="container pricing-container">
-    <h1 class="pricing-title">💎 Tarifs</h1>
-    <p class="pricing-subtitle">Choisissez la formule qui vous convient</p>
-
-    <div class="pricing-grid">
-        {# Plan Gratuit #}
-        <div class="pricing-card">
-            <div class="plan-header">
-                <h3>Gratuit</h3>
-                <div class="plan-price">
-                    <span class="price">0€</span>
-                    <span class="period">/mois</span>
-                </div>
-            </div>
-            <ul class="plan-features">
-                <li>✅ 2 devis par jour</li>
-                <li>✅ PDF professionnel</li>
-                <li>✅ Calculs automatiques</li>
-                <li>⚠️ Watermark "DevisFlash"</li>
-                <li>❌ Pas d'historique</li>
-                <li>❌ Pas de personnalisation</li>
-            </ul>
-            <a href="{{ path('quote_new') }}" class="btn-plan">
-                Commencer gratuitement
-            </a>
+    <div class="pricing-page">
+        <div class="pricing-header">
+            <h1>💎 Choisissez votre plan</h1>
+            <p class="pricing-subtitle">Créez des devis professionnels en quelques secondes</p>
         </div>
 
-        {# Plan Pro #}
-        <div class="pricing-card pricing-card-featured">
-            <div class="badge-popular">Le plus populaire</div>
-            <div class="plan-header">
-                <h3>Pro</h3>
-                <div class="plan-price">
-                    <span class="price">9€</span>
-                    <span class="period">/mois</span>
+        <div class="pricing-container">
+            <!-- Plan Gratuit -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h2>🆓 Gratuit</h2>
+                    <div class="price">
+                        <span class="amount">0€</span>
+                        <span class="period">/mois</span>
+                    </div>
+                    <p class="price-description">Parfait pour tester</p>
+                </div>
+
+                <div class="card-features">
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text"><strong>2 devis par jour</strong></span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">3 templates PDF</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Upload logo</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Historique</span>
+                    </div>
+                    <div class="feature feature-negative">
+                        <span class="feature-icon">⚠️</span>
+                        <span class="feature-text">Watermark</span>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    {% if app.user %}
+                        <a href="{{ path('quote_new') }}" class="btn-secondary btn-block">
+                            Créer un devis
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_register') }}" class="btn-secondary btn-block">
+                            Commencer gratuitement
+                        </a>
+                    {% endif %}
                 </div>
             </div>
-            <ul class="plan-features">
-                <li>✅ Devis illimités</li>
-                <li>✅ Sans watermark</li>
-                <li>✅ Historique des devis</li>
-                <li>✅ Templates personnalisables</li>
-                <li>✅ Support prioritaire</li>
-                <li>✅ Export Excel</li>
-            </ul>
-            <a href="#" class="btn-plan btn-plan-pro" onclick="alert('Paiement Stripe - À venir !'); return false;">
-                Passer Pro maintenant
-            </a>
-            <p class="plan-note">Disponible prochainement</p>
+
+            <!-- Plan Pack 10 devis -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h2>💎 Pack 10 devis</h2>
+                    <div class="price">
+                        <span class="amount">5€</span>
+                        <span class="period">one-time</span>
+                    </div>
+                    <p class="price-description">Sans abonnement</p>
+                </div>
+
+                <div class="card-features">
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text"><strong>10 devis sans watermark</strong></span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Valable 6 mois</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">3 templates PDF</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Upload logo</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Historique (10 devis)</span>
+                    </div>
+                    <div class="feature feature-negative">
+                        <span class="feature-icon">❌</span>
+                        <span class="feature-text">Pas de support prioritaire</span>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    {% if app.user %}
+                        <button class="btn-secondary btn-block" onclick="handlePayment('pack')">
+                            Acheter le pack
+                        </button>
+                    {% else %}
+                        <a href="{{ path('app_register') }}" class="btn-secondary btn-block">
+                            S'inscrire pour acheter
+                        </a>
+                    {% endif %}
+                    <p class="card-note">Paiement unique</p>
+                </div>
+            </div>
+
+            <!-- Plan Pro (Recommandé) -->
+            <div class="pricing-card pricing-card-pro">
+                <div class="card-badge">⭐ RECOMMANDÉ</div>
+
+                <div class="card-header">
+                    <h2>🚀 Pro</h2>
+                    <div class="price">
+                        <span class="amount">9€</span>
+                        <span class="period">/mois HT</span>
+                    </div>
+                    <p class="price-description">10,80€ TTC - Sans engagement</p>
+                </div>
+
+                <div class="card-features">
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text"><strong>Devis illimités</strong></span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text"><strong>Sans watermark</strong></span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">3 templates PDF</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Upload logo</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Historique illimité</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Envoi email auto</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Support prioritaire</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span class="feature-text">Export données</span>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    {% if app.user %}
+                        <button class="btn-primary btn-block" onclick="handlePayment('pro')">
+                            Passer Pro maintenant
+                        </button>
+                    {% else %}
+                        <a href="{{ path('app_register') }}" class="btn-primary btn-block">
+                            S'inscrire pour passer Pro
+                        </a>
+                    {% endif %}
+                    <p class="card-note">Résiliation à tout moment</p>
+                </div>
+            </div>
         </div>
 
-        {# Plan Pack #}
-        <div class="pricing-card">
-            <div class="plan-header">
-                <h3>Pack 10 devis</h3>
-                <div class="plan-price">
-                    <span class="price">5€</span>
-                    <span class="period">one-time</span>
+        <!-- Tableau comparatif -->
+        <div class="comparison-table">
+            <h2>📊 Comparatif détaillé</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Fonctionnalité</th>
+                    <th>Gratuit</th>
+                    <th>Pack 10</th>
+                    <th>Pro</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Nombre de devis</td>
+                    <td>2/jour</td>
+                    <td>10 (6 mois)</td>
+                    <td>Illimité</td>
+                </tr>
+                <tr>
+                    <td>Watermark</td>
+                    <td>Oui ⚠️</td>
+                    <td>Non ✅</td>
+                    <td>Non ✅</td>
+                </tr>
+                <tr>
+                    <td>Templates PDF</td>
+                    <td>3 ✅</td>
+                    <td>3 ✅</td>
+                    <td>3 ✅</td>
+                </tr>
+                <tr>
+                    <td>Upload logo</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+                <tr>
+                    <td>Historique</td>
+                    <td>Oui ✅</td>
+                    <td>10 devis</td>
+                    <td>Illimité ✅</td>
+                </tr>
+                <tr>
+                    <td>Envoi email</td>
+                    <td>Manuel</td>
+                    <td>Manuel</td>
+                    <td>Auto ✅</td>
+                </tr>
+                <tr>
+                    <td>Support</td>
+                    <td>Standard</td>
+                    <td>Standard</td>
+                    <td>Prioritaire ✅</td>
+                </tr>
+                <tr>
+                    <td>Prix</td>
+                    <td><strong>0€</strong></td>
+                    <td><strong>5€</strong></td>
+                    <td><strong>9€/mois</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FAQ -->
+        <div class="pricing-faq">
+            <h2>❓ Questions fréquentes</h2>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Quelle offre choisir ?</h3>
+                    <p><strong>Gratuit</strong> : Pour tester<br>
+                        <strong>Pack 10</strong> : Si vous faites 1-2 devis/mois (freelance occasionnel)<br>
+                        <strong>Pro</strong> : Si vous faites 5+ devis/mois (freelance régulier)</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Le Pack 10 expire-t-il ?</h3>
+                    <p>Oui, après 6 mois. Mais vous gardez l'accès à vos devis dans l'historique ! C'est un délai généreux pour les utiliser.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Puis-je passer du Pack au Pro ?</h3>
+                    <p>Oui ! Vous pouvez upgrader à tout moment. Vos devis restants dans le Pack seront conservés.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Comment fonctionne la limite gratuite ?</h3>
+                    <p>2 devis par jour maximum. Le compteur se réinitialise à minuit. Parfait pour tester le service !</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Les paiements sont-ils sécurisés ?</h3>
+                    <p>Oui ! Nous utilisons Stripe, le leader mondial des paiements en ligne. Vos données bancaires ne transitent jamais par nos serveurs.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Puis-je annuler l'abonnement Pro ?</h3>
+                    <p>Oui, à tout moment, sans frais. Vous repassez automatiquement en plan Gratuit à la fin de votre période payée.</p>
                 </div>
             </div>
-            <ul class="plan-features">
-                <li>✅ 10 devis sans watermark</li>
-                <li>✅ Valable 6 mois</li>
-                <li>✅ Pas d'abonnement</li>
-                <li>❌ Pas d'historique</li>
-                <li>❌ Pas de personnalisation</li>
-            </ul>
-            <a href="#" class="btn-plan" onclick="alert('Paiement Stripe - À venir !'); return false;">
-                Acheter le pack
-            </a>
-            <p class="plan-note">Disponible prochainement</p>
+        </div>
+
+        <!-- CTA Final -->
+        <div class="pricing-cta">
+            <h2>🚀 Prêt à créer des devis professionnels ?</h2>
+            <p>Rejoignez les entrepreneurs qui font confiance à DevisFlash</p>
+            {% if app.user %}
+                <a href="{{ path('quote_new') }}" class="btn-primary btn-large">
+                    Créer mon premier devis
+                </a>
+            {% else %}
+                <a href="{{ path('app_register') }}" class="btn-primary btn-large">
+                    Commencer gratuitement
+                </a>
+            {% endif %}
         </div>
     </div>
 
-    <div class="faq-section">
-        <h2>Questions fréquentes</h2>
-        
-        <div class="faq-item">
-            <h4>❓ Puis-je vraiment créer 2 devis gratuits par jour ?</h4>
-            <p>Oui ! Aucune carte bancaire requise. Parfait pour tester le service.</p>
-        </div>
+    <style>
+        .pricing-page {
+            min-height: 80vh;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
 
-        <div class="faq-item">
-            <h4>❓ Le watermark est-il très visible ?</h4>
-            <p>Non, c'est une mention discrète en bas de page "Généré avec DevisFlash".</p>
-        </div>
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
 
-        <div class="faq-item">
-            <h4>❓ Puis-je annuler l'abonnement Pro ?</h4>
-            <p>Oui, à tout moment. Aucun engagement.</p>
-        </div>
+        .pricing-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
 
-        <div class="faq-item">
-            <h4>❓ Les devis sont-ils conformes légalement ?</h4>
-            <p>Oui, ils contiennent toutes les mentions essentielles. Vous restez responsable du contenu.</p>
-        </div>
-    </div>
-</div>
+        .pricing-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+
+        .pricing-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-card-pro {
+            border: 3px solid #fbbf24;
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.3);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .card-header h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            margin: 1rem 0;
+        }
+
+        .price .amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #4f46e5;
+        }
+
+        .price .period {
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+
+        .price-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .card-features {
+            margin-bottom: 2rem;
+        }
+
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .feature:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .feature-negative {
+            opacity: 0.6;
+        }
+
+        .card-action {
+            text-align: center;
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .card-note {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        /* Tableau comparatif */
+        .comparison-table {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 20px;
+        }
+
+        .comparison-table h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .comparison-table td {
+            color: #4b5563;
+        }
+
+        /* FAQ */
+        .pricing-faq {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 20px;
+        }
+
+        .pricing-faq h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 2rem;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .faq-item {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .faq-item h3 {
+            font-size: 1.1rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-item p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        /* CTA Final */
+        .pricing-cta {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+        }
+
+        .pricing-cta h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-cta p {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .btn-large {
+            font-size: 1.2rem;
+            padding: 1.25rem 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-header h1 {
+                font-size: 2rem;
+            }
+
+            .pricing-container {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
+        }
+    </style>
+
+    <script>
+        // Fonction de gestion des paiements Stripe
+        async function handlePayment(type) {
+            try {
+                // Afficher un loader
+                const button = event.target;
+                const originalText = button.textContent;
+                button.disabled = true;
+                button.textContent = 'Chargement...';
+
+                // Appeler l'API pour créer la session Stripe
+                const response = await fetch(`/payment/create-checkout-session/${type}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert('Erreur : ' + data.error);
+                    button.disabled = false;
+                    button.textContent = originalText;
+                    return;
+                }
+
+                // Rediriger vers Stripe Checkout
+                if (data.url) {
+                    window.location.href = data.url;
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue. Veuillez réessayer.');
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+    </script>
 {% endblock %}

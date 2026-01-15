@@ -3,15 +3,15 @@
 {% block title %}Inscription - DevisFlash{% endblock %}
 
 {% block body %}
-<div class="auth-container">
-    <div class="auth-card auth-card-large">
-        <div class="auth-header">
-            <h1>🚀 Créer un compte</h1>
-            <p>Commencez à créer des devis professionnels en quelques secondes</p>
-        </div>
+    <div class="auth-container">
+        <div class="auth-card auth-card-large">
+            <div class="auth-header">
+                <h1>🚀 Créer un compte</h1>
+                <p>Commencez à créer des devis professionnels en quelques secondes</p>
+            </div>
 
-        {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
-            
+            {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
+
             <div class="form-row">
                 <div class="form-group">
                     {{ form_label(registrationForm.firstName) }}
@@ -47,7 +47,10 @@
 
             <div class="form-group-checkbox">
                 {{ form_widget(registrationForm.agreeTerms) }}
-                {{ form_label(registrationForm.agreeTerms) }}
+                <label for="{{ registrationForm.agreeTerms.vars.id }}">
+                    J'accepte les <a href="{{ path('legal_cgv') }}" target="_blank" class="link-primary">conditions générales de vente</a>
+                    et la <a href="{{ path('legal_privacy') }}" target="_blank" class="link-primary">politique de confidentialité</a>
+                </label>
                 {{ form_errors(registrationForm.agreeTerms) }}
             </div>
 
@@ -55,175 +58,190 @@
                 Créer mon compte gratuitement
             </button>
 
-        {{ form_end(registrationForm) }}
+            {{ form_end(registrationForm) }}
 
-        <div class="auth-footer">
-            <p>Déjà inscrit ? <a href="{{ path('app_login') }}" class="link-primary">Se connecter</a></p>
-        </div>
+            <div class="auth-footer">
+                <p>Déjà inscrit ? <a href="{{ path('app_login') }}" class="link-primary">Se connecter</a></p>
+            </div>
 
-        <div class="features-list">
-            <div class="feature-item">
-                <span class="feature-icon">✓</span>
-                <span>2 devis gratuits par jour</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">✓</span>
-                <span>Historique de vos devis</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">✓</span>
-                <span>3 templates PDF professionnels</span>
+            <div class="features-list">
+                <div class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    <span>2 devis gratuits par jour</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    <span>Historique de vos devis</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    <span>3 templates PDF professionnels</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<style>
-.auth-container {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+    <style>
+        .auth-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
 
-.auth-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 3rem;
-    width: 100%;
-    max-width: 450px;
-}
+        .auth-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+        }
 
-.auth-card-large {
-    max-width: 550px;
-}
+        .auth-card-large {
+            max-width: 550px;
+        }
 
-.auth-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-.auth-header h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: #1f2937;
-}
+        .auth-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
 
-.auth-header p {
-    color: #6b7280;
-    font-size: 1rem;
-}
+        .auth-header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
 
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
 
-.form-hint {
-    display: block;
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-    color: #6b7280;
-}
+        .form-hint {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
 
-.form-group-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
+        .form-group-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
 
-.form-group-checkbox input[type="checkbox"] {
-    margin-top: 0.25rem;
-}
+        .form-group-checkbox input[type="checkbox"] {
+            margin-top: 0.25rem;
+        }
 
-.form-group-checkbox label {
-    font-size: 0.875rem;
-    color: #4b5563;
-    cursor: pointer;
-}
+        .form-group-checkbox label {
+            font-size: 0.875rem;
+            color: #4b5563;
+            cursor: pointer;
+        }
 
-.btn-full {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
-}
+        .btn-full {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
 
-.auth-footer {
-    margin-top: 2rem;
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
-}
+        .auth-footer {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
 
-.auth-footer p {
-    color: #6b7280;
-}
+        .auth-footer p {
+            color: #6b7280;
+        }
 
-.link-primary {
-    color: #4f46e5;
-    text-decoration: none;
-    font-weight: 600;
-}
+        .link-primary {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
 
-.link-primary:hover {
-    text-decoration: underline;
-}
+        .link-primary:hover {
+            text-decoration: underline;
+        }
 
-.features-list {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
-}
+        .features-list {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
 
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-    color: #4b5563;
-    font-size: 0.95rem;
-}
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
 
-.feature-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background: #d1fae5;
-    color: #059669;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.875rem;
-}
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #d1fae5;
+            color: #059669;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
 
-/* Erreurs de formulaire */
-.invalid-feedback {
-    color: #dc2626;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-}
+        /* Erreurs de formulaire */
+        .invalid-feedback {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
 
-/* Style pour les erreurs Symfony */
-.form-error-icon {
-    color: #dc2626;
-}
+        /* Style pour les erreurs Symfony */
+        .form-error-icon {
+            color: #dc2626;
+        }
 
-.form-error-message {
-    color: #dc2626;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-}
-</style>
+        .form-error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Liens dans la checkbox CGV */
+        .form-group-checkbox label {
+            color: #4b5563;
+        }
+
+        .form-group-checkbox .link-primary {
+            color: #4f46e5;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .form-group-checkbox .link-primary:hover {
+            color: #4338ca;
+        }
+    </style>
 {% endblock %}

@@ -33,3 +33,9 @@ services:
     App\Security\FormLoginAuthenticator:
         arguments:
             $urlGenerator: '@router'
+
+
+    App\Controller\PaymentController:
+        arguments:
+            $stripeSecretKey: '%env(STRIPE_SECRET_KEY)%'
+            $stripePublicKey: '%env(STRIPE_PUBLIC_KEY)%'

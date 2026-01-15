@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement réussi - DevisFlash{% endblock %}
+
+{% block body %}
+<div class="payment-success-page">
+    <div class="success-container">
+        <div class="success-icon">✅</div>
+        <h1>Paiement réussi !</h1>
+        
+        {% if type is defined and type == 'pack' %}
+            <p class="success-message">
+                Votre <strong>Pack 10 devis</strong> a été acheté avec succès !
+            </p>
+            <p>Vous pouvez maintenant créer 10 devis sans watermark pendant 6 mois.</p>
+        {% elseif type is defined and type == 'subscription' %}
+            <p class="success-message">
+                Votre abonnement <strong>Pro</strong> est maintenant actif !
+            </p>
+            <p>Vous avez accès à tous les avantages : devis illimités, sans watermark, support prioritaire.</p>
+        {% else %}
+            <p class="success-message">
+                Merci pour votre achat !
+            </p>
+        {% endif %}
+
+        <div class="success-actions">
+            <a href="{{ path('dashboard') }}" class="btn-primary">
+                Retour au Dashboard
+            </a>
+            <a href="{{ path('quote_new') }}" class="btn-secondary">
+                Créer un devis
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.payment-success-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+}
+
+.success-container {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.success-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.success-container h1 {
+    font-size: 2.5rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.success-message {
+    font-size: 1.2rem;
+    color: #4b5563;
+    margin-bottom: 1rem;
+}
+
+.success-container p {
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.success-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.success-actions .btn-primary,
+.success-actions .btn-secondary {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .success-container {
+        padding: 2rem;
+    }
+    
+    .success-container h1 {
+        font-size: 2rem;
+    }
+    
+    .success-actions {
+        flex-direction: column;
+    }
+    
+    .success-actions .btn-primary,
+    .success-actions .btn-secondary {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
