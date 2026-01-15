@@ -34,13 +34,27 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ===== DÉSACTIVÉ POUR LES TESTS =====
-            // Vérifier la limite gratuite
-            // if (!$quoteLimiter->canGenerate()) {
-            //     $this->addFlash('error', 'Limite gratuite atteinte ! Passez au plan Pro pour continuer.');
-            //     return $this->redirectToRoute('pricing');
-            // }
-            // ===== FIN DÉSACTIVATION =====
+            $user = $this->getUser();
+
+            // Vérifier les limites selon le type d'utilisateur
+            if ($user) {
+                // Utilisateur avec PACK : vérifier et décrémenter les crédits
+                if ($user->getSubscription() === 'pack') {
+                    if (!$user->hasActivePackCredits()) {
+                        $this->addFlash('error', '⚠️ Vos crédits pack sont épuisés ou expirés ! Achetez un nouveau pack ou passez Pro.');
+                        return $this->redirectToRoute('pricing');
+                    }
+                    // Les crédits seront décrémentés après la sauvegarde
+                }
+                // Utilisateur GRATUIT : vérifier la limite 2/jour
+                elseif ($user->getSubscription() === 'free') {
+                    if (!$quoteLimiter->canGenerate()) {
+                        $this->addFlash('error', '⚠️ Limite gratuite atteinte (2 devis/jour) ! Passez au plan Pro pour des devis illimités.');
+                        return $this->redirectToRoute('pricing');
+                    }
+                }
+                // Utilisateur PRO : aucune limite
+            }
 
             // Gérer l'upload du logo
             $logoFile = $form->get('companyLogo')->getData();
@@ -81,6 +95,12 @@ class QuoteController extends AbstractController
             if ($this->getUser()) {
                 $quote->setUser($this->getUser());
                 $entityManager->persist($quote);
+
+                // Décrémenter les crédits pack si applicable
+                if ($this->getUser()->getSubscription() === 'pack') {
+                    $this->getUser()->usePackCredit();
+                }
+
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Devis créé et sauvegardé dans votre historique ! 🎉');
@@ -92,10 +112,10 @@ class QuoteController extends AbstractController
             // Générer le PDF avec le template
             $pdfPath = $pdfGenerator->generate($quote, $isPro, $template);
 
-            // ===== DÉSACTIVÉ POUR LES TESTS =====
-            // Incrémenter le compteur
-            // $quoteLimiter->increment();
-            // ===== FIN DÉSACTIVATION =====
+            // Incrémenter le compteur pour les utilisateurs GRATUITS uniquement
+            if ($this->getUser() && $this->getUser()->getSubscription() === 'free') {
+                $quoteLimiter->increment();
+            }
 
             // Télécharger le PDF
             $response = new BinaryFileResponse($pdfPath);

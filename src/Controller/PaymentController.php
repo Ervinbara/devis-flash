@@ -103,26 +103,84 @@ class PaymentController extends AbstractController
 
     #[Route('/payment/success', name: 'payment_success')]
     #[IsGranted('ROLE_USER')]
-    public function success(Request $request): Response
+    public function success(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sessionId = $request->query->get('session_id');
 
         if ($sessionId) {
             Stripe::setApiKey($this->stripeSecretKey);
-            
+
             try {
                 $session = Session::retrieve($sessionId);
-                $metadata = $session->metadata;
-                
-                // Le webhook gérera la mise à jour du compte
-                // Ici on affiche juste un message de confirmation
-                
+
+                // DEBUG: Afficher les données brutes
+                dump('=== STRIPE SESSION DEBUG ===');
+                dump('Session ID: ' . $sessionId);
+                dump('Metadata (raw): ', $session->metadata);
+
+                // IMPORTANT: Convertir metadata en tableau
+                $metadata = $session->metadata->toArray();
+                dump('Metadata (array): ', $metadata);
+
+                $type = $metadata['type'] ?? 'unknown';
+                dump('Type: ' . $type);
+                dump('Payment Status: ' . $session->payment_status);
+
+                // Mettre à jour le statut de l'utilisateur immédiatement
+                $user = $this->getUser();
+                dump('User: ', $user);
+
+                if ($user instanceof User) {
+                    dump('User ID: ' . $user->getId());
+                    dump('Current Subscription: ' . $user->getSubscription());
+
+                    if ($type === 'subscription') {
+                        dump('UPDATING TO PRO...');
+
+                        // Activer l'abonnement Pro
+                        $user->setSubscription('pro');
+
+                        dump('After setSubscription: ' . $user->getSubscription());
+
+                        $entityManager->flush();
+
+                        dump('FLUSH EXECUTED!');
+
+                        // Vérifier après flush
+                        dump('After flush: ' . $user->getSubscription());
+
+                        // Message de confirmation
+                        $this->addFlash('success', '🎉 Votre abonnement Pro a été activé avec succès !');
+                    } elseif ($type === 'pack') {
+                        dump('ACTIVATING PACK...');
+
+                        // Activer le pack 10 devis
+                        $user->addPackCredits(10, 6); // 10 crédits, valable 6 mois
+
+                        dump('Pack Credits: ' . $user->getPackCredits());
+                        dump('Pack Expires At: ' . ($user->getPackExpiresAt() ? $user->getPackExpiresAt()->format('Y-m-d H:i:s') : 'null'));
+
+                        $entityManager->flush();
+
+                        dump('PACK ACTIVATED!');
+
+                        $this->addFlash('success', '🎉 Votre Pack 10 devis a été acheté avec succès ! Valable 6 mois.');
+                    } else {
+                        dump('TYPE NOT MATCHED: ' . $type);
+                    }
+                } else {
+                    dump('ERROR: User is not instance of User');
+                }
+
+                dump('=== END DEBUG ===');
+
                 return $this->render('payment/success.html.twig', [
                     'session' => $session,
-                    'type' => $metadata['type'] ?? 'unknown',
+                    'type' => $type,
                 ]);
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur lors de la vérification du paiement');
+                dump('ERROR: ' . $e->getMessage());
+                $this->addFlash('error', 'Erreur lors de la vérification du paiement: ' . $e->getMessage());
             }
         }
 
@@ -142,7 +200,7 @@ class PaymentController extends AbstractController
     {
         $payload = $request->getContent();
         $sigHeader = $request->headers->get('stripe-signature');
-        
+
         // TODO: Configurer le webhook secret dans .env
         // $webhookSecret = $_ENV['STRIPE_WEBHOOK_SECRET'];
 
@@ -177,7 +235,7 @@ class PaymentController extends AbstractController
     private function handleCheckoutComplete(array $session, EntityManagerInterface $entityManager): void
     {
         $userId = $session['client_reference_id'] ?? $session['metadata']['user_id'] ?? null;
-        
+
         if (!$userId) {
             return;
         }

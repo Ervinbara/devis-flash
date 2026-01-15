@@ -184,6 +184,26 @@
         </p>
     </div>
 
+    {# Message d'avertissement sur le choix du template #}
+    <div class="template-warning">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-content">
+            <strong>Choisissez bien votre template maintenant !</strong>
+            <p>
+                {% if app.user and app.user.subscription == 'pack' %}
+                    Changer de template après = créer un nouveau devis = <strong>-1 crédit</strong>.
+                {% elseif app.user and app.user.subscription == 'pro' %}
+                    Vous avez des devis illimités, changez autant de fois que vous voulez ! ✨
+                {% else %}
+                    Changer de template après compte dans votre limite de 2 devis/jour.
+                {% endif %}
+            </p>
+            <p class="tip">
+                💡 <strong>Astuce :</strong> Utilisez "Dupliquer" depuis le dashboard pour tester différents templates sans consommer de crédit supplémentaire.
+            </p>
+        </div>
+    </div>
+
     {{ form_end(form) }}
 </div>
 {% endblock %}

@@ -40,6 +40,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $subscription = 'free'; // free, pro, pack
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $packCredits = 0; // Nombre de devis restants dans le pack
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $packExpiresAt = null; // Date d'expiration du pack (6 mois)
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -157,7 +163,70 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isPro(): bool
     {
-        return in_array($this->subscription, ['pro', 'pack']);
+        return $this->subscription === 'pro' || $this->hasActivePackCredits();
+    }
+
+    public function getPackCredits(): ?int
+    {
+        return $this->packCredits;
+    }
+
+    public function setPackCredits(?int $packCredits): static
+    {
+        $this->packCredits = $packCredits;
+        return $this;
+    }
+
+    public function getPackExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->packExpiresAt;
+    }
+
+    public function setPackExpiresAt(?\DateTimeImmutable $packExpiresAt): static
+    {
+        $this->packExpiresAt = $packExpiresAt;
+        return $this;
+    }
+
+    /**
+     * Vérifie si l'utilisateur a des crédits pack actifs (non expirés)
+     */
+    public function hasActivePackCredits(): bool
+    {
+        if ($this->packCredits === null || $this->packCredits <= 0) {
+            return false;
+        }
+
+        if ($this->packExpiresAt === null) {
+            return false;
+        }
+
+        // Vérifier si le pack n'est pas expiré
+        return $this->packExpiresAt > new \DateTimeImmutable();
+    }
+
+    /**
+     * Utilise un crédit du pack
+     */
+    public function usePackCredit(): bool
+    {
+        if (!$this->hasActivePackCredits()) {
+            return false;
+        }
+
+        $this->packCredits--;
+        return true;
+    }
+
+    /**
+     * Ajoute des crédits au pack (lors de l'achat)
+     */
+    public function addPackCredits(int $credits, int $validityMonths = 6): static
+    {
+        $this->packCredits = ($this->packCredits ?? 0) + $credits;
+        $this->packExpiresAt = (new \DateTimeImmutable())->modify("+{$validityMonths} months");
+        $this->subscription = 'pack';
+        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
