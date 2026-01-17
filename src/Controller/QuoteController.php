@@ -103,31 +103,16 @@ class QuoteController extends AbstractController
 
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Devis créé et sauvegardé dans votre historique ! 🎉');
+                // Message de succès avec lien de téléchargement
+                $this->addFlash('success', 'Devis créé avec succès ! 🎉 Cliquez sur le bouton de téléchargement pour obtenir votre PDF.');
+
+                // Rediriger vers le dashboard (évite les créations multiples)
+                return $this->redirectToRoute('dashboard');
             }
 
-            // Déterminer si Pro (sans watermark)
-            $isPro = $this->getUser() && $this->getUser()->isPro();
-
-            // Générer le PDF avec le template
-            $pdfPath = $pdfGenerator->generate($quote, $isPro, $template);
-
-            // Incrémenter le compteur pour les utilisateurs GRATUITS uniquement
-            if ($this->getUser() && $this->getUser()->getSubscription() === 'free') {
-                $quoteLimiter->increment();
-            }
-
-            // Télécharger le PDF
-            $response = new BinaryFileResponse($pdfPath);
-            $response->setContentDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'devis_' . $quote->getQuoteNumber() . '.pdf'
-            );
-
-            // Supprimer le fichier après envoi
-            $response->deleteFileAfterSend(true);
-
-            return $response;
+            // Si utilisateur non connecté (ne devrait pas arriver ici normalement)
+            $this->addFlash('error', 'Vous devez être connecté pour créer un devis.');
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('quote/new.html.twig', [

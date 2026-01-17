@@ -7,7 +7,30 @@
 
     {{ encore_entry_link_tags('app') }}
     {% block stylesheets %}{% endblock %}
-            {{ encore_entry_link_tags('app') }}
+
+    <style>
+        /* Structure pour footer collé en bas */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar">
@@ -16,18 +39,13 @@
         <ul class="nav-links">
             <li><a href="{{ path('quote_new') }}">Créer un devis</a></li>
             <li><a href="{{ path('pricing') }}">Tarifs</a></li>
-
             {% if app.user %}
-                {# Utilisateur connecté #}
-                <li><a href="{{ path('dashboard') }}" class="nav-dashboard">📊 Dashboard</a></li>
-                <li>
-                    <span class="nav-user">👤 {{ app.user.firstName }}</span>
-                </li>
-                <li><a href="{{ path('app_logout') }}" class="nav-logout">Déconnexion</a></li>
+                <li><a href="{{ path('dashboard') }}">📊 Dashboard</a></li>
+                <li><a href="#">👤 {{ app.user.firstName }}</a></li>
+                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
             {% else %}
-                {# Utilisateur non connecté #}
-                <li><a href="{{ path('app_login') }}" class="nav-login">Connexion</a></li>
-                <li><a href="{{ path('app_register') }}" class="btn-nav-register">S'inscrire</a></li>
+                <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                <li><a href="{{ path('app_register') }}">Inscription</a></li>
             {% endif %}
         </ul>
     </div>
@@ -58,7 +76,5 @@
 
 {{ encore_entry_script_tags('app') }}
 {% block javascripts %}{% endblock %}
-            {{ encore_entry_script_tags('app') }}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
 </body>
 </html>
