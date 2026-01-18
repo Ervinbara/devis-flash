@@ -2,6 +2,10 @@
 
 {% block title %}Tableau de bord - DevisFlash{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/dashboard-quotes.css') }}">
+{% endblock %}
+
 {% block body %}
     <div class="dashboard-container">
         <div class="dashboard-header">
@@ -68,12 +72,49 @@
             {% endif %}
         </div>
 
+        {# Encart d'explication des règles #}
+        <div class="dashboard-info-box">
+            <h3>ℹ️ Comment modifier vos devis ?</h3>
+            <div class="info-rules">
+                {% if app.user.subscription == 'pro' %}
+                    <div class="info-rule">
+                        <div class="info-rule-icon">⭐</div>
+                        <div class="info-rule-text">
+                            <strong>Abonnement Pro :</strong> Modifiez et dupliquez autant que vous voulez, sans limite !
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="info-rule">
+                        <div class="info-rule-icon">🟢</div>
+                        <div class="info-rule-text">
+                            <strong>Moins de 24h :</strong> Modifiez gratuitement vos devis récents
+                        </div>
+                    </div>
+                    <div class="info-rule">
+                        <div class="info-rule-icon">🟠</div>
+                        <div class="info-rule-text">
+                            <strong>Plus de 24h :</strong> Modifier ou dupliquer consomme 1 crédit
+                            {% if app.user.subscription == 'free' %}
+                                ou compte dans votre limite quotidienne
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="info-rule">
+                    <div class="info-rule-icon">📥</div>
+                    <div class="info-rule-text">
+                        <strong>Télécharger avec template :</strong> Toujours gratuit, testez tous les styles !
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {# Actions rapides #}
         <div class="quick-actions">
             <a href="{{ path('quote_new') }}" class="btn-primary">
                 ➕ Nouveau devis
             </a>
-            {% if not app.user.isPro %}
+            {% if app.user.subscription != 'pro' %}
                 <a href="{{ path('pricing') }}" class="btn-secondary">
                     ⭐ Passer Pro
                 </a>
@@ -85,65 +126,113 @@
             <h2>Mes devis</h2>
 
             {% if quotes|length > 0 %}
-                <div class="quotes-table-container">
-                    <table class="quotes-table">
-                        <thead>
-                        <tr>
-                            <th>N° Devis</th>
-                            <th>Client</th>
-                            <th>Date</th>
-                            <th>Total HT</th>
-                            <th>Total TTC</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for quote in quotes %}
-                            <tr>
-                                <td class="quote-number">{{ quote.quoteNumber }}</td>
-                                <td>
-                                    <div class="client-info">
-                                        <strong>{{ quote.clientName }}</strong>
-                                        {% if quote.clientCompany %}
-                                            <small>{{ quote.clientCompany }}</small>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                <td>{{ quote.createdAt|date('d/m/Y') }}</td>
-                                <td class="amount">{{ quote.totalHt|number_format(2, ',', ' ') }} €</td>
-                                <td class="amount total">{{ quote.totalTtc|number_format(2, ',', ' ') }} €</td>
-                                <td class="actions">
-                                    <a href="{{ path('dashboard_quote_download', {id: quote.id}) }}"
-                                       class="btn-action btn-download"
-                                       title="Télécharger">
-                                        📥
-                                    </a>
-                                    <button onclick="sendQuoteByEmail({{ quote.id }})"
-                                            class="btn-action btn-email"
-                                            title="Envoyer par email">
-                                        ✉️
+                <div class="quotes-list">
+                    {% for quote in quotes %}
+                        {% set now = date() %}
+                        {% set createdAt = quote.createdAt %}
+                        {% set hoursSinceCreation = (now.timestamp - createdAt.timestamp) / 3600 %}
+                        {% set isEditableFree = hoursSinceCreation < 24 %}
+                        {% set isPro = app.user.subscription == 'pro' %}
+
+                        {# Déterminer la classe CSS #}
+                        {% if isPro %}
+                            {% set cardClass = 'pro-unlimited' %}
+                            {% set statusText = 'Modification illimitée' %}
+                        {% elseif isEditableFree %}
+                            {% set cardClass = 'editable-free' %}
+                            {% set statusText = 'Modifiable gratuit' %}
+                        {% else %}
+                            {% set cardClass = 'editable-paid' %}
+                            {% set statusText = 'Modification payante' %}
+                        {% endif %}
+
+                        <div class="quote-card {{ cardClass }}">
+                            <div class="quote-header">
+                                <div class="quote-number">
+                                    {% if isPro %}
+                                        ⭐
+                                    {% elseif isEditableFree %}
+                                        🟢
+                                    {% else %}
+                                        🟠
+                                    {% endif %}
+                                    {{ quote.quoteNumber }}
+                                </div>
+                                <div class="quote-status">{{ statusText }}</div>
+                            </div>
+
+                            <div class="quote-info">
+                                <div class="quote-client">
+                                    {{ quote.clientName }}
+                                    {% if quote.clientCompany %} - {{ quote.clientCompany }}{% endif %}
+                                </div>
+                                <div class="quote-amount">{{ quote.totalTtc|number_format(2, ',', ' ') }} € TTC</div>
+
+                                <div class="quote-date">
+                                    📅 Créé {{ quote.createdAt|date('d/m/Y à H:i') }}
+                                    (il y a {% if hoursSinceCreation < 1 %}moins d'1h{% elseif hoursSinceCreation < 24 %}{{ hoursSinceCreation|round }} heures{% else %}{{ (hoursSinceCreation / 24)|round }} jours{% endif %})
+
+                                    {% if isEditableFree and not isPro %}
+                                        <span class="time-remaining">
+                                        ⏰ Encore {{ (24 - hoursSinceCreation)|round }}h pour modifier gratuit
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="quote-actions">
+                                {# Bouton Télécharger avec dropdown #}
+                                <div class="btn-download-wrapper" style="position: relative;">
+                                    <button class="btn-quote btn-download" onclick="toggleTemplateDropdown({{ quote.id }})">
+                                        📥 Télécharger ▼
                                     </button>
-                                    <a href="{{ path('dashboard_quote_duplicate', {id: quote.id}) }}"
-                                       class="btn-action btn-duplicate"
-                                       title="Dupliquer">
-                                        📋
-                                    </a>
-                                    <form method="post"
-                                          action="{{ path('dashboard_quote_delete', {id: quote.id}) }}"
-                                          style="display: inline;"
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quote.id) }}">
-                                        <button type="submit"
-                                                class="btn-action btn-delete"
-                                                title="Supprimer">
-                                            🗑️
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                                    <div class="template-dropdown" id="dropdown-{{ quote.id }}">
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'modern'}) }}" class="template-option {% if quote.pdfTemplate == 'modern' %}active{% endif %}">
+                                            🎨 Moderne {% if quote.pdfTemplate == 'modern' %}✓{% endif %}
+                                        </a>
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'classic'}) }}" class="template-option {% if quote.pdfTemplate == 'classic' %}active{% endif %}">
+                                            📄 Classique {% if quote.pdfTemplate == 'classic' %}✓{% endif %}
+                                        </a>
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'elegant'}) }}" class="template-option {% if quote.pdfTemplate == 'elegant' %}active{% endif %}">
+                                            ✨ Élégant {% if quote.pdfTemplate == 'elegant' %}✓{% endif %}
+                                        </a>
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'corporate'}) }}" class="template-option {% if quote.pdfTemplate == 'corporate' %}active{% endif %}">
+                                            🎯 Corporate {% if quote.pdfTemplate == 'corporate' %}✓{% endif %}
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {# Bouton Modifier #}
+                                <a href="{{ path('dashboard_quote_edit', {id: quote.id}) }}" class="btn-quote btn-edit">
+                                    ✏️ Modifier
+                                    {% if not isPro and not isEditableFree %}
+                                        <span class="credit-badge">-1 crédit</span>
+                                    {% endif %}
+                                </a>
+
+                                {# Bouton Envoyer #}
+                                <button class="btn-quote btn-send" onclick="openEmailModal({{ quote.id }})">
+                                    📧 Envoyer
+                                </button>
+
+                                {# Bouton Dupliquer #}
+                                <a href="{{ path('dashboard_quote_duplicate', {id: quote.id}) }}" class="btn-quote btn-duplicate">
+                                    📋 Dupliquer
+                                    {% if not isPro %}
+                                        <span class="credit-badge">-1 crédit</span>
+                                    {% endif %}
+                                </a>
+
+                                {# Bouton Supprimer #}
+                                <form method="post" action="{{ path('dashboard_quote_delete', {id: quote.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quote.id) }}">
+                                    <button type="submit" class="btn-quote btn-delete">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             {% else %}
                 <div class="empty-state">
@@ -151,340 +240,45 @@
                     <h3>Aucun devis pour le moment</h3>
                     <p>Créez votre premier devis pour le voir apparaître ici !</p>
                     <a href="{{ path('quote_new') }}" class="btn-primary">
-                        Créer mon premier devis
+                        ➕ Créer mon premier devis
                     </a>
                 </div>
             {% endif %}
         </div>
     </div>
+{% endblock %}
 
-    <style>
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .dashboard-header {
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-header h1 {
-            font-size: 2rem;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .dashboard-header p {
-            color: #6b7280;
-            font-size: 1.1rem;
-        }
-
-        /* Alertes */
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            border: 1px solid #10b981;
-            color: #065f46;
-        }
-
-        /* Statistiques */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-icon {
-            font-size: 2.5rem;
-        }
-
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
-        }
-
-        /* Actions rapides */
-        .quick-actions {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* Section devis */
-        .quotes-section h2 {
-            font-size: 1.5rem;
-            color: #1f2937;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Table */
-        .quotes-table-container {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .quotes-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .quotes-table thead {
-            background: #f9fafb;
-        }
-
-        .quotes-table th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .quotes-table td {
-            padding: 1rem;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .quote-number {
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            color: #4f46e5;
-        }
-
-        .client-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .client-info small {
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        .amount {
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .amount.total {
-            color: #059669;
-            font-size: 1.05rem;
-        }
-
-        /* Actions */
-        .actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-action {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s;
-            background: #f3f4f6;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn-download:hover {
-            background: #dbeafe;
-        }
-
-        .btn-email {
-            background: #f3f4f6;
-        }
-
-        .btn-email:hover {
-            background: #e0e7ff;
-        }
-
-        .btn-duplicate:hover {
-            background: #fef3c7;
-        }
-
-        .btn-delete:hover {
-            background: #fee2e2;
-        }
-
-        /* Toast notifications */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            max-width: 400px;
-            font-weight: 500;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast-success {
-            border-left: 4px solid #10b981;
-            color: #065f46;
-        }
-
-        .toast-error {
-            border-left: 4px solid #ef4444;
-            color: #991b1b;
-        }
-
-        .toast-info {
-            border-left: 4px solid #3b82f6;
-            color: #1e40af;
-        }
-
-        /* État vide */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: white;
-            border: 2px dashed #e5e7eb;
-            border-radius: 12px;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state h3 {
-            font-size: 1.5rem;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .empty-state p {
-            color: #6b7280;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .quotes-table-container {
-                overflow-x: auto;
-            }
-
-            .quotes-table {
-                min-width: 800px;
-            }
-        }
-    </style>
-
+{% block javascripts %}
     <script>
-        // Toast notification system
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
+        // Toggle dropdown template
+        function toggleTemplateDropdown(quoteId) {
+            const dropdown = document.getElementById('dropdown-' + quoteId);
+            const allDropdowns = document.querySelectorAll('.template-dropdown');
 
-            // Fade in
-            setTimeout(() => toast.classList.add('show'), 10);
+            // Fermer tous les autres dropdowns
+            allDropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('active');
+                }
+            });
 
-            // Fade out and remove
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            // Toggle le dropdown actuel
+            dropdown.classList.toggle('active');
         }
 
-        // Fonction d'envoi par email
-        async function sendQuoteByEmail(quoteId) {
-            try {
-                // 1. Récupérer les données du devis
-                const response = await fetch(`/dashboard/quote/${quoteId}/email-data`);
-                const data = await response.json();
-
-                if (!data.clientEmail) {
-                    showToast('❌ Aucun email client renseigné dans ce devis', 'error');
-                    return;
-                }
-
-                // 2. Télécharger le PDF
-                showToast('📥 Téléchargement du PDF...', 'info');
-                window.open(data.downloadUrl, '_blank');
-
-                // 3. Préparer le message email
-                const subject = `Devis N° ${data.quoteNumber}`;
-                const body = `Bonjour ${data.clientName},
-
-Veuillez trouver ci-joint votre devis N° ${data.quoteNumber}.
-
-Cordialement,
-${data.companyName}
-
----
-✨ Devis créé avec DevisFlash
-👉 https://devisflash.app`;
-
-                // 4. Ouvrir mailto après 1 seconde
-                setTimeout(() => {
-                    const mailtoLink = `mailto:${data.clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                    window.location.href = mailtoLink;
-
-                    // 5. Afficher les instructions
-                    showToast('📎 Glissez le PDF téléchargé en pièce jointe et envoyez !', 'success');
-                }, 1000);
-
-            } catch (error) {
-                console.error('Erreur:', error);
-                showToast('❌ Erreur lors de la préparation de l\'email', 'error');
+        // Fermer les dropdowns si clic en dehors
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.btn-download-wrapper')) {
+                document.querySelectorAll('.template-dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
             }
+        });
+
+        // Modal email (à implémenter si besoin)
+        function openEmailModal(quoteId) {
+            // TODO: Implémenter modal email
+            alert('Fonctionnalité email en cours de développement');
         }
     </script>
-
 {% endblock %}

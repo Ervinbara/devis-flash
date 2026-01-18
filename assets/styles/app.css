@@ -841,3 +841,500 @@ main.main-content > * {
         display: none;
     }
 }
+/* ============================================
+   DASHBOARD BASE STYLES
+   ============================================ */
+/* ============================================
+   DASHBOARD - STYLES DE BASE
+   ============================================ */
+
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    color: #1F2937;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    color: #6B7280;
+    font-size: 1.1rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1F2937;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #6B7280;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-primary {
+    background: #4F46E5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: #4338CA;
+}
+
+.btn-secondary {
+    background: #10B981;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    background: #059669;
+}
+
+/* Quotes Section */
+.quotes-section {
+    margin-top: 2rem;
+}
+
+.quotes-section h2 {
+    font-size: 1.5rem;
+    color: #1F2937;
+    margin-bottom: 1.5rem;
+}
+
+.quotes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    color: #1F2937;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #6B7280;
+    margin-bottom: 1.5rem;
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background: #D1FAE5;
+    color: #065F46;
+    border-left: 4px solid #10B981;
+}
+
+.alert-error {
+    background: #FEE2E2;
+    color: #991B1B;
+    border-left: 4px solid #EF4444;
+}
+
+.alert-warning {
+    background: #FEF3C7;
+    color: #92400E;
+    border-left: 4px solid #F59E0B;
+}
+
+/* ============================================
+   DASHBOARD - ÉTATS VISUELS DES DEVIS
+   ============================================ */
+
+/* Carte de devis - Base */
+.quote-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.quote-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* État : Modifiable gratuitement (< 24h) */
+.quote-card.editable-free {
+    border-left-color: #10B981; /* Vert */
+    background: linear-gradient(to right, #ECFDF5 0%, white 20%);
+}
+
+.quote-card.editable-free .quote-status {
+    background: #10B981;
+    color: white;
+}
+
+.quote-card.editable-free .time-remaining {
+    color: #059669;
+    font-weight: 600;
+}
+
+/* État : Modification payante (> 24h) */
+.quote-card.editable-paid {
+    border-left-color: #F59E0B; /* Orange */
+    background: linear-gradient(to right, #FEF3C7 0%, white 20%);
+}
+
+.quote-card.editable-paid .quote-status {
+    background: #F59E0B;
+    color: white;
+}
+
+.quote-card.editable-paid .credit-badge {
+    background: #FCD34D;
+    color: #92400E;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* État : Utilisateur Pro (illimité) */
+.quote-card.pro-unlimited {
+    border-left-color: #8B5CF6; /* Violet */
+    background: linear-gradient(to right, #F3E8FF 0%, white 20%);
+}
+
+.quote-card.pro-unlimited .quote-status {
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    color: white;
+}
+
+/* Header de la carte */
+.quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.quote-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1F2937;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quote-status {
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Informations du devis */
+.quote-info {
+    margin-bottom: 1rem;
+}
+
+.quote-client {
+    font-size: 1rem;
+    color: #4B5563;
+    margin-bottom: 0.25rem;
+}
+
+.quote-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #7C3AED;
+}
+
+.quote-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6B7280;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.time-remaining {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background: #FEF3C7;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+/* Boutons d'action */
+.quote-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.btn-quote {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+/* Bouton Télécharger avec dropdown */
+.btn-download {
+    background: #7C3AED;
+    color: white;
+    position: relative;
+}
+
+.btn-download:hover {
+    background: #6D28D9;
+}
+
+/* Bouton Modifier - État gratuit */
+.editable-free .btn-edit {
+    background: #10B981;
+    color: white;
+}
+
+.editable-free .btn-edit:hover {
+    background: #059669;
+}
+
+/* Bouton Modifier - État payant */
+.editable-paid .btn-edit {
+    background: #F59E0B;
+    color: white;
+}
+
+.editable-paid .btn-edit:hover {
+    background: #D97706;
+}
+
+/* Bouton Modifier - Pro */
+.pro-unlimited .btn-edit {
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    color: white;
+}
+
+.pro-unlimited .btn-edit:hover {
+    opacity: 0.9;
+}
+
+/* Bouton Dupliquer */
+.btn-duplicate {
+    background: #3B82F6;
+    color: white;
+}
+
+.btn-duplicate:hover {
+    background: #2563EB;
+}
+
+/* Bouton Envoyer */
+.btn-send {
+    background: #6B7280;
+    color: white;
+}
+
+.btn-send:hover {
+    background: #4B5563;
+}
+
+/* Bouton Supprimer */
+.btn-delete {
+    background: #EF4444;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #DC2626;
+}
+
+/* Dropdown template */
+.template-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.25rem;
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    z-index: 1000;
+    display: none;
+}
+
+.template-dropdown.active {
+    display: block;
+}
+
+.template-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.template-option:hover {
+    background: #F3F4F6;
+}
+
+.template-option.active {
+    background: #EDE9FE;
+    font-weight: 600;
+}
+
+/* Encart d'explication */
+.dashboard-info-box {
+    background: linear-gradient(135deg, #EDE9FE 0%, #F3E8FF 100%);
+    border: 2px solid #8B5CF6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-info-box h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #5B21B6;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.info-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.info-rule {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+}
+
+.info-rule-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.info-rule-text {
+    color: #4B5563;
+    line-height: 1.5;
+}
+
+.info-rule-text strong {
+    color: #1F2937;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .quote-actions {
+        flex-direction: column;
+    }
+
+    .btn-quote {
+        width: 100%;
+        justify-content: center;
+    }
+}
