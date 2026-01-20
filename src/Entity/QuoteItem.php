@@ -37,6 +37,18 @@ class QuoteItem
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private $unitPriceHt = 0;
 
+    /**
+     * Méthode appelée lors du clonage de l'item
+     * Réinitialise l'ID et la relation avec le devis parent
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $this->quote = null;
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -122,6 +122,33 @@ class Quote
         $this->createdAt = new \DateTimeImmutable();
     }
 
+    /**
+     * Méthode appelée lors du clonage du devis
+     * Gère correctement la copie des items et réinitialise les métadonnées
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            // Réinitialiser l'ID pour créer un nouveau devis
+            $this->id = null;
+            $this->quoteNumber = null;
+            $this->createdAt = new \DateTimeImmutable();
+            $this->updatedAt = null;
+
+            // Cloner les items
+            $originalItems = $this->items;
+            $this->items = new ArrayCollection();
+
+            foreach ($originalItems as $item) {
+                $clonedItem = clone $item;
+                $this->addItem($clonedItem);
+            }
+
+            // IMPORTANT : Recalculer les totaux après clonage des items
+            $this->calculateTotals();
+        }
+    }
+
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
@@ -267,7 +294,7 @@ class Quote
         );
 
         $this->totalHt = $totalHt;
-        $vatAmount = $totalHt * ($this->vatRate / 100);
+        $vatAmount = $totalHt * ($this->getVatRate() / 100);
         $this->totalTtc = $totalHt + $vatAmount;
     }
 

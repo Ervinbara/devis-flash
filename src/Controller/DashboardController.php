@@ -107,30 +107,24 @@ class DashboardController extends AbstractController
             // Pour l'instant on autorise
         }
 
-        // Créer une copie
+        // CORRECTION : Utiliser clone (qui appelle automatiquement __clone())
         $newQuote = clone $originalQuote;
-        $newQuote->setQuoteNumber(null); // Générer un nouveau numéro
+
+        // Configurer le nouveau devis
+        $newQuote->setUser($user);
         $newQuote->setQuoteDate(new \DateTime());
         $newQuote->setQuoteValidUntil((new \DateTime())->modify('+30 days'));
-        $newQuote->setCreatedAt(new \DateTimeImmutable());
-        $newQuote->setUpdatedAt(null);
+        $newQuote->setQuoteNumber($newQuote->generateQuoteNumber());
 
-        // Copier les items
-        foreach ($originalQuote->getItems() as $item) {
-            $newItem = clone $item;
-            $newQuote->addItem($newItem);
-        }
-
-        // Recalculer les totaux
-        $newQuote->calculateTotals();
+        // IMPORTANT : Les totaux sont déjà calculés dans __clone()
+        // Pas besoin de rappeler calculateTotals() ici
 
         // Décrémenter les crédits si Pack
         if ($user->getSubscription() === 'pack') {
             $user->usePackCredit();
         }
-        // TODO: Incrémenter compteur gratuit si free
 
-        // Sauvegarder
+        // Sauvegarder (cascade persist s'occupe des items)
         $entityManager->persist($newQuote);
         $entityManager->flush();
 

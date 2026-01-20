@@ -3,211 +3,281 @@
 {% block title %}Créer un devis - DevisFlash{% endblock %}
 
 {% block body %}
-<div class="container form-container">
-    <div class="form-header">
-        <h1>📄 Nouveau devis</h1>
-        <div class="quota-info">
+    <div class="container form-container">
+        <div class="form-header">
+            <h1>📄 Nouveau devis</h1>
+            <div class="quota-info">
             <span class="quota-badge">
                 {{ remaining }} / {{ limit }} devis gratuits restants aujourd'hui
             </span>
-        </div>
-    </div>
-
-    {{ form_start(form, {'attr': {'class': 'quote-form', 'id': 'quoteForm', 'enctype': 'multipart/form-data'}}) }}
-    
-    {# Section Entreprise #}
-    <div class="form-section">
-        <h2 class="section-title">🏢 Votre entreprise</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                {{ form_label(form.companyName) }}
-                {{ form_widget(form.companyName) }}
-                {{ form_errors(form.companyName) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.companyContact) }}
-                {{ form_widget(form.companyContact) }}
-                {{ form_errors(form.companyContact) }}
-            </div>
-            <div class="form-group full-width">
-                {{ form_label(form.companyAddress) }}
-                {{ form_widget(form.companyAddress) }}
-                {{ form_errors(form.companyAddress) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.companyEmail) }}
-                {{ form_widget(form.companyEmail) }}
-                {{ form_errors(form.companyEmail) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.companyPhone) }}
-                {{ form_widget(form.companyPhone) }}
-                {{ form_errors(form.companyPhone) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.companySiret) }}
-                {{ form_widget(form.companySiret) }}
-                {{ form_errors(form.companySiret) }}
-            </div>
-            <div class="form-group full-width">
-                {{ form_label(form.companyLogo) }}
-                {{ form_widget(form.companyLogo) }}
-                {{ form_errors(form.companyLogo) }}
-                <small class="file-upload-hint">Format JPG ou PNG, max 2Mo. Votre logo apparaîtra dans le header du PDF.</small>
             </div>
         </div>
-    </div>
 
-    {# Section Client #}
-    <div class="form-section">
-        <h2 class="section-title">👤 Votre client</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                {{ form_label(form.clientName) }}
-                {{ form_widget(form.clientName) }}
-                {{ form_errors(form.clientName) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.clientCompany) }}
-                {{ form_widget(form.clientCompany) }}
-                {{ form_errors(form.clientCompany) }}
-            </div>
-            <div class="form-group full-width">
-                {{ form_label(form.clientAddress) }}
-                {{ form_widget(form.clientAddress) }}
-                {{ form_errors(form.clientAddress) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.clientEmail) }}
-                {{ form_widget(form.clientEmail) }}
-                {{ form_errors(form.clientEmail) }}
-            </div>
-        </div>
-    </div>
+        {{ form_start(form, {'attr': {'class': 'quote-form', 'id': 'quoteForm', 'enctype': 'multipart/form-data'}}) }}
 
-    {# Section Devis #}
-    <div class="form-section">
-        <h2 class="section-title">📋 Informations du devis</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                {{ form_label(form.quoteNumber) }}
-                {{ form_widget(form.quoteNumber) }}
-                {{ form_errors(form.quoteNumber) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.quoteDate) }}
-                {{ form_widget(form.quoteDate) }}
-                {{ form_errors(form.quoteDate) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.quoteValidUntil) }}
-                {{ form_widget(form.quoteValidUntil) }}
-                {{ form_errors(form.quoteValidUntil) }}
-            </div>
-            <div class="form-group full-width">
-                {{ form_label(form.quoteDescription) }}
-                {{ form_widget(form.quoteDescription) }}
-                {{ form_errors(form.quoteDescription) }}
-            </div>
-        </div>
-    </div>
-
-    {# Section Items #}
-    <div class="form-section">
-        <h2 class="section-title">📦 Lignes de devis</h2>
-        
-        <div id="items-container" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}" data-index="{{ form.items|length }}">
-            {% for item in form.items %}
-                <div class="item-row">
-                    <div class="item-fields">
-                        <div class="form-group item-label">
-                            {{ form_widget(item.label) }}
-                            {{ form_errors(item.label) }}
-                        </div>
-                        <div class="form-group item-quantity">
-                            {{ form_widget(item.quantity) }}
-                            {{ form_errors(item.quantity) }}
-                        </div>
-                        <div class="form-group item-price">
-                            {{ form_widget(item.unitPriceHt) }}
-                            {{ form_errors(item.unitPriceHt) }}
-                        </div>
-                    </div>
-                    <button type="button" class="btn-remove-item" onclick="removeItem(this)">🗑️</button>
+        {# Section Entreprise #}
+        <div class="form-section">
+            <h2 class="section-title">🏢 Votre entreprise</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.companyName) }}
+                    {{ form_widget(form.companyName) }}
+                    {{ form_errors(form.companyName) }}
                 </div>
-            {% endfor %}
+                <div class="form-group">
+                    {{ form_label(form.companyContact) }}
+                    {{ form_widget(form.companyContact) }}
+                    {{ form_errors(form.companyContact) }}
+                </div>
+                <div class="form-group full-width">
+                    {{ form_label(form.companyAddress) }}
+                    {{ form_widget(form.companyAddress) }}
+                    {{ form_errors(form.companyAddress) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.companyEmail) }}
+                    {{ form_widget(form.companyEmail) }}
+                    {{ form_errors(form.companyEmail) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.companyPhone) }}
+                    {{ form_widget(form.companyPhone) }}
+                    {{ form_errors(form.companyPhone) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.companySiret) }}
+                    {{ form_widget(form.companySiret) }}
+                    {{ form_errors(form.companySiret) }}
+                </div>
+                <div class="form-group full-width">
+                    {{ form_label(form.companyLogo) }}
+                    {{ form_widget(form.companyLogo) }}
+                    {{ form_errors(form.companyLogo) }}
+                    <small class="file-upload-hint">Format JPG ou PNG, max 2Mo. Votre logo apparaîtra dans le header du PDF.</small>
+                </div>
+            </div>
         </div>
 
-        <button type="button" class="btn-add-item" onclick="addItem()">
-            ➕ Ajouter une ligne
-        </button>
-
-        <div class="totals-preview" id="totalsPreview">
-            <div class="total-line">
-                <span>Total HT :</span>
-                <span id="totalHt">0,00 €</span>
-            </div>
-            <div class="total-line">
-                <span>TVA (<span id="vatRateDisplay">20</span>%) :</span>
-                <span id="vatAmount">0,00 €</span>
-            </div>
-            <div class="total-line total-ttc">
-                <span>Total TTC :</span>
-                <span id="totalTtc">0,00 €</span>
+        {# Section Client #}
+        <div class="form-section">
+            <h2 class="section-title">👤 Votre client</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.clientName) }}
+                    {{ form_widget(form.clientName) }}
+                    {{ form_errors(form.clientName) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.clientCompany) }}
+                    {{ form_widget(form.clientCompany) }}
+                    {{ form_errors(form.clientCompany) }}
+                </div>
+                <div class="form-group full-width">
+                    {{ form_label(form.clientAddress) }}
+                    {{ form_widget(form.clientAddress) }}
+                    {{ form_errors(form.clientAddress) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.clientEmail) }}
+                    {{ form_widget(form.clientEmail) }}
+                    {{ form_errors(form.clientEmail) }}
+                </div>
             </div>
         </div>
-    </div>
 
-    {# Section TVA et conditions #}
-    <div class="form-section">
-        <h2 class="section-title">💶 TVA et conditions</h2>
-        <div class="form-grid">
+        {# Section Devis #}
+        <div class="form-section">
+            <h2 class="section-title">📋 Informations du devis</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.quoteNumber) }}
+                    {{ form_widget(form.quoteNumber) }}
+                    {{ form_errors(form.quoteNumber) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.quoteDate) }}
+                    {{ form_widget(form.quoteDate) }}
+                    {{ form_errors(form.quoteDate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.quoteValidUntil) }}
+                    {{ form_widget(form.quoteValidUntil) }}
+                    {{ form_errors(form.quoteValidUntil) }}
+                </div>
+                <div class="form-group full-width">
+                    {{ form_label(form.quoteDescription) }}
+                    {{ form_widget(form.quoteDescription) }}
+                    {{ form_errors(form.quoteDescription) }}
+                </div>
+            </div>
+        </div>
+
+        {# Section Items #}
+        <div class="form-section">
+            <h2 class="section-title">📦 Lignes de devis</h2>
+
+            <div id="items-container" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}" data-index="{{ form.items|length }}">
+                {% for item in form.items %}
+                    <div class="item-row">
+                        <div class="item-fields">
+                            <div class="form-group item-label">
+                                {{ form_widget(item.label) }}
+                                {{ form_errors(item.label) }}
+                            </div>
+                            <div class="form-group item-quantity">
+                                {{ form_widget(item.quantity) }}
+                                {{ form_errors(item.quantity) }}
+                            </div>
+                            <div class="form-group item-price">
+                                {{ form_widget(item.unitPriceHt) }}
+                                {{ form_errors(item.unitPriceHt) }}
+                            </div>
+                        </div>
+                        <button type="button" class="btn-remove-item" onclick="removeItem(this)">🗑️</button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" class="btn-add-item" onclick="addItem()">
+                ➕ Ajouter une ligne
+            </button>
+
+            <div class="totals-preview" id="totalsPreview">
+                <div class="total-line">
+                    <span>Total HT :</span>
+                    <span id="totalHt">0,00 €</span>
+                </div>
+                <div class="total-line">
+                    <span>TVA (<span id="vatRateDisplay">20</span>%) :</span>
+                    <span id="vatAmount">0,00 €</span>
+                </div>
+                <div class="total-line total-ttc">
+                    <span>Total TTC :</span>
+                    <span id="totalTtc">0,00 €</span>
+                </div>
+            </div>
+        </div>
+
+        {# Section TVA et conditions #}
+        <div class="form-section">
+            <h2 class="section-title">💶 TVA et conditions</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.vatRate) }}
+                    {{ form_widget(form.vatRate) }}
+                    {{ form_errors(form.vatRate) }}
+                </div>
+                <div class="form-group full-width">
+                    {{ form_label(form.paymentTerms) }}
+                    {{ form_widget(form.paymentTerms) }}
+                    {{ form_errors(form.paymentTerms) }}
+                </div>
+            </div>
+        </div>
+
+        {# Section Style du PDF #}
+        <div class="form-section">
+            <h2 class="section-title">🎨 Style du PDF</h2>
+            <div class="template-info-box">
+                <div class="info-icon">💡</div>
+                <div class="info-content">
+                    <p><strong>Pas de stress !</strong> Vous pourrez télécharger votre devis dans tous les styles depuis le dashboard.</p>
+                    <p>Le template choisi ici sera votre style par défaut, mais vous pourrez le changer à tout moment.</p>
+                </div>
+            </div>
             <div class="form-group">
-                {{ form_label(form.vatRate) }}
-                {{ form_widget(form.vatRate) }}
-                {{ form_errors(form.vatRate) }}
-            </div>
-            <div class="form-group full-width">
-                {{ form_label(form.paymentTerms) }}
-                {{ form_widget(form.paymentTerms) }}
-                {{ form_errors(form.paymentTerms) }}
+                {{ form_label(form.pdfTemplate) }}
+                {{ form_widget(form.pdfTemplate) }}
+                {{ form_errors(form.pdfTemplate) }}
             </div>
         </div>
-    </div>
 
-    {# Submit #}
-    <div class="form-actions">
-        {{ form_widget(form.submit) }}
-        <p class="form-note">
-            ✨ Version gratuite avec watermark<br>
-            <a href="{{ path('pricing') }}">Passer au plan Pro</a> pour supprimer le watermark
-        </p>
-    </div>
-
-    {# Message d'avertissement sur le choix du template #}
-    <div class="template-warning">
-        <div class="warning-icon">⚠️</div>
-        <div class="warning-content">
-            <strong>Choisissez bien votre template maintenant !</strong>
-            <p>
-                {% if app.user and app.user.subscription == 'pack' %}
-                    Changer de template après = créer un nouveau devis = <strong>-1 crédit</strong>.
-                {% elseif app.user and app.user.subscription == 'pro' %}
-                    Vous avez des devis illimités, changez autant de fois que vous voulez ! ✨
-                {% else %}
-                    Changer de template après compte dans votre limite de 2 devis/jour.
-                {% endif %}
-            </p>
-            <p class="tip">
-                💡 <strong>Astuce :</strong> Utilisez "Dupliquer" depuis le dashboard pour tester différents templates sans consommer de crédit supplémentaire.
-            </p>
+        {# Submit #}
+        <div class="form-actions">
+            {{ form_widget(form.submit, {'label': '✨ Créer le devis', 'attr': {'class': 'btn-submit'}}) }}
+            {% if app.user and app.user.subscription != 'pro' %}
+                <p class="form-note">
+                    ⚠️ Version gratuite avec watermark<br>
+                    <a href="{{ path('pricing') }}">Passer au plan Pro</a> pour supprimer le watermark
+                </p>
+            {% endif %}
         </div>
+
+        {{ form_end(form) }}
     </div>
 
-    {{ form_end(form) }}
-</div>
+    <style>
+        .template-info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .template-info-box .info-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .template-info-box .info-content {
+            flex: 1;
+        }
+
+        .template-info-box .info-content p {
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+        }
+
+        .template-info-box .info-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .template-info-box .info-content strong {
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .form-note {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .form-note a {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .form-note a:hover {
+            text-decoration: underline;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
-{# Le script quote-form.js est maintenant chargé via app.js #}
+    {# Le script quote-form.js est maintenant chargé via app.js #}
 {% endblock %}
