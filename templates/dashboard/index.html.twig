@@ -188,16 +188,19 @@
                                     </button>
                                     <div class="template-dropdown" id="dropdown-{{ quote.id }}">
                                         <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'modern'}) }}" class="template-option {% if quote.pdfTemplate == 'modern' %}active{% endif %}">
-                                            🎨 Moderne {% if quote.pdfTemplate == 'modern' %}✓{% endif %}
-                                        </a>
-                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'classic'}) }}" class="template-option {% if quote.pdfTemplate == 'classic' %}active{% endif %}">
-                                            📄 Classique {% if quote.pdfTemplate == 'classic' %}✓{% endif %}
-                                        </a>
-                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'elegant'}) }}" class="template-option {% if quote.pdfTemplate == 'elegant' %}active{% endif %}">
-                                            ✨ Élégant {% if quote.pdfTemplate == 'elegant' %}✓{% endif %}
+                                            🎨 Modern {% if quote.pdfTemplate == 'modern' %}✓{% endif %}
                                         </a>
                                         <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'corporate'}) }}" class="template-option {% if quote.pdfTemplate == 'corporate' %}active{% endif %}">
-                                            🎯 Corporate {% if quote.pdfTemplate == 'corporate' %}✓{% endif %}
+                                            💼 Corporate {% if quote.pdfTemplate == 'corporate' %}✓{% endif %}
+                                        </a>
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'creative'}) }}" class="template-option {% if quote.pdfTemplate == 'creative' %}active{% endif %}">
+                                            🚀 Creative {% if quote.pdfTemplate == 'creative' %}✓{% endif %}
+                                        </a>
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'classic'}) }}" class="template-option {% if quote.pdfTemplate == 'classic' %}active{% endif %}">
+                                            📄 Classic {% if quote.pdfTemplate == 'classic' %}✓{% endif %}
+                                        </a>
+                                        <a href="{{ path('dashboard_quote_download_template', {id: quote.id, template: 'elegant'}) }}" class="template-option {% if quote.pdfTemplate == 'elegant' %}active{% endif %}">
+                                            ✨ Elegant {% if quote.pdfTemplate == 'elegant' %}✓{% endif %}
                                         </a>
                                     </div>
                                 </div>

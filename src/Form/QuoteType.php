@@ -128,6 +128,8 @@ class QuoteType extends AbstractType
                     '🎨 Modern (Violet)' => 'modern',
                     '💼 Corporate (Bleu marine)' => 'corporate',
                     '🚀 Creative (Orange)' => 'creative',
+                    '📄 Classic (Noir/Gris)' => 'classic',
+                    '✨ Elegant (Bordeaux/Or)' => 'elegant',
                 ],
                 'expanded' => true,
                 'attr' => ['class' => 'template-choice']
