@@ -6,15 +6,14 @@ namespace App\Controller;
 
 use App\Entity\Quote;
 use App\Entity\QuoteItem;
+use App\Entity\User;
 use App\Form\QuoteType;
 use App\Service\PdfGenerator;
 use App\Service\QuoteLimiter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuoteController extends AbstractController
@@ -34,27 +33,32 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var \App\Entity\User|null $user */
             $user = $this->getUser();
 
-            // Vérifier les limites selon le type d'utilisateur
-            if ($user) {
-                // Utilisateur avec PACK : vérifier et décrémenter les crédits
-                if ($user->getSubscription() === 'pack') {
-                    if (!$user->hasActivePackCredits()) {
-                        $this->addFlash('error', '⚠️ Vos crédits pack sont épuisés ou expirés ! Achetez un nouveau pack ou passez Pro.');
-                        return $this->redirectToRoute('pricing');
-                    }
-                    // Les crédits seront décrémentés après la sauvegarde
-                }
-                // Utilisateur GRATUIT : vérifier la limite 2/jour
-                elseif ($user->getSubscription() === 'free') {
-                    if (!$quoteLimiter->canGenerate()) {
-                        $this->addFlash('error', '⚠️ Limite gratuite atteinte (2 devis/jour) ! Passez au plan Pro pour des devis illimités.');
-                        return $this->redirectToRoute('pricing');
-                    }
-                }
-                // Utilisateur PRO : aucune limite
+            // Si l'utilisateur n'est PAS connecté, rediriger vers l'inscription
+            if (!$user) {
+                $this->addFlash('error', '⚠️ Vous devez être connecté pour créer un devis.');
+                return $this->redirectToRoute('app_register');
             }
+
+            // Vérifier les limites selon le type d'utilisateur
+            if ($user->getSubscription() === 'pack') {
+                // Utilisateur PACK : vérifier et décrémenter les crédits
+                if (!$user->hasActivePackCredits()) {
+                    $this->addFlash('error', '⚠️ Vos crédits pack sont épuisés ou expirés ! Achetez un nouveau pack ou passez Pro.');
+                    return $this->redirectToRoute('pricing');
+                }
+                // Les crédits seront décrémentés après la sauvegarde
+            } elseif ($user->getSubscription() === 'free') {
+                // Utilisateur GRATUIT : vérifier la limite 2/jour
+                if (!$quoteLimiter->canGenerate()) {
+                    $this->addFlash('error', '⚠️ Limite gratuite atteinte (2 devis/jour) ! Passez au plan Pro pour des devis illimités.');
+                    return $this->redirectToRoute('pricing');
+                }
+                // Le compteur sera incrémenté après la sauvegarde
+            }
+            // Utilisateur PRO : aucune limite, on continue
 
             // Gérer l'upload du logo
             $logoFile = $form->get('companyLogo')->getData();
@@ -91,28 +95,28 @@ class QuoteController extends AbstractController
                 $quote->setQuoteNumber($quote->generateQuoteNumber());
             }
 
-            // Si l'utilisateur est connecté, sauvegarder en BDD
-            if ($this->getUser()) {
-                $quote->setUser($this->getUser());
-                $entityManager->persist($quote);
+            // Associer l'utilisateur et sauvegarder
+            $quote->setUser($user);
+            $entityManager->persist($quote);
 
-                // Décrémenter les crédits pack si applicable
-                if ($this->getUser()->getSubscription() === 'pack') {
-                    $this->getUser()->usePackCredit();
-                }
-
-                $entityManager->flush();
-
-                // Message de succès avec lien de téléchargement
-                $this->addFlash('success', 'Devis créé avec succès ! 🎉 Cliquez sur le bouton de téléchargement pour obtenir votre PDF.');
-
-                // Rediriger vers le dashboard (évite les créations multiples)
-                return $this->redirectToRoute('dashboard');
+            // Décrémenter les crédits pack si applicable
+            if ($user->getSubscription() === 'pack') {
+                $user->usePackCredit();
             }
 
-            // Si utilisateur non connecté (ne devrait pas arriver ici normalement)
-            $this->addFlash('error', 'Vous devez être connecté pour créer un devis.');
-            return $this->redirectToRoute('login');
+            // Incrémenter le compteur gratuit si free
+            if ($user->getSubscription() === 'free') {
+                $quoteLimiter->increment();
+            }
+
+            // Sauvegarder en base
+            $entityManager->flush();
+
+            // Message de succès
+            $this->addFlash('success', 'Devis créé avec succès ! 🎉 Vous pouvez le télécharger depuis votre dashboard.');
+
+            // Rediriger vers le dashboard
+            return $this->redirectToRoute('dashboard');
         }
 
         return $this->render('quote/new.html.twig', [

@@ -6,9 +6,11 @@ namespace App\Controller;
 
 use App\Entity\Quote;
 use App\Entity\QuoteItem;
+use App\Entity\User;
 use App\Form\QuoteType;
 use App\Repository\QuoteRepository;
 use App\Service\PdfGenerator;
+use App\Service\QuoteLimiter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -26,6 +28,7 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'dashboard')]
     public function index(QuoteRepository $quoteRepository): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         // Récupérer tous les devis de l'utilisateur
@@ -81,7 +84,8 @@ class DashboardController extends AbstractController
     public function duplicateQuote(
         int $id,
         QuoteRepository $quoteRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        QuoteLimiter $quoteLimiter
     ): Response {
         $originalQuote = $quoteRepository->find($id);
 
@@ -94,6 +98,7 @@ class DashboardController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        /** @var User $user */
         $user = $this->getUser();
 
         // Vérifier les limites AVANT de dupliquer
@@ -103,11 +108,14 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('pricing');
             }
         } elseif ($user->getSubscription() === 'free') {
-            // TODO: Vérifier limite quotidienne avec QuoteLimiter
-            // Pour l'instant on autorise
+            // Vérifier la limite quotidienne
+            if (!$quoteLimiter->canGenerate()) {
+                $this->addFlash('error', '⚠️ Limite gratuite atteinte (2 devis/jour) ! Passez au plan Pro pour des devis illimités.');
+                return $this->redirectToRoute('pricing');
+            }
         }
 
-        // CORRECTION : Utiliser clone (qui appelle automatiquement __clone())
+        // Utiliser clone (qui appelle automatiquement __clone())
         $newQuote = clone $originalQuote;
 
         // Configurer le nouveau devis
@@ -116,12 +124,16 @@ class DashboardController extends AbstractController
         $newQuote->setQuoteValidUntil((new \DateTime())->modify('+30 days'));
         $newQuote->setQuoteNumber($newQuote->generateQuoteNumber());
 
-        // IMPORTANT : Les totaux sont déjà calculés dans __clone()
-        // Pas besoin de rappeler calculateTotals() ici
+        // Les totaux sont déjà calculés dans __clone()
 
         // Décrémenter les crédits si Pack
         if ($user->getSubscription() === 'pack') {
             $user->usePackCredit();
+        }
+
+        // Incrémenter le compteur gratuit si free
+        if ($user->getSubscription() === 'free') {
+            $quoteLimiter->increment();
         }
 
         // Sauvegarder (cascade persist s'occupe des items)
@@ -230,7 +242,8 @@ class DashboardController extends AbstractController
         int $id,
         Request $request,
         QuoteRepository $quoteRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        QuoteLimiter $quoteLimiter
     ): Response {
         $quote = $quoteRepository->find($id);
 
@@ -243,6 +256,7 @@ class DashboardController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        /** @var User $user */
         $user = $this->getUser();
 
         // Calculer l'âge du devis
@@ -262,8 +276,11 @@ class DashboardController extends AbstractController
                     return $this->redirectToRoute('pricing');
                 }
             } elseif ($user->getSubscription() === 'free') {
-                // TODO: Vérifier limite quotidienne avec QuoteLimiter
-                // Pour l'instant on autorise
+                // Vérifier la limite quotidienne
+                if (!$quoteLimiter->canGenerate()) {
+                    $this->addFlash('error', '⚠️ Limite gratuite atteinte (2 devis/jour) ! Passez au plan Pro pour des devis illimités.');
+                    return $this->redirectToRoute('pricing');
+                }
             }
         }
 
@@ -287,7 +304,10 @@ class DashboardController extends AbstractController
                 if ($user->getSubscription() === 'pack') {
                     $user->usePackCredit();
                 }
-                // TODO: Incrémenter compteur gratuit si free
+                // Incrémenter compteur gratuit si free
+                if ($user->getSubscription() === 'free') {
+                    $quoteLimiter->increment();
+                }
             }
 
             // Sauvegarder

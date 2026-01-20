@@ -7,9 +7,32 @@
         <div class="form-header">
             <h1>📄 Nouveau devis</h1>
             <div class="quota-info">
-            <span class="quota-badge">
-                {{ remaining }} / {{ limit }} devis gratuits restants aujourd'hui
-            </span>
+                {% if app.user %}
+                    {% if app.user.subscription == 'pro' %}
+                        <span class="quota-badge quota-badge-pro">
+                            ⭐ Devis illimités
+                        </span>
+                    {% elseif app.user.subscription == 'pack' %}
+                        {% if app.user.hasActivePackCredits %}
+                            <span class="quota-badge quota-badge-pack">
+                                💎 {{ app.user.packCredits }} crédits restants
+                            </span>
+                        {% else %}
+                            <span class="quota-badge quota-badge-expired">
+                                ⚠️ Crédits épuisés
+                            </span>
+                        {% endif %}
+                    {% else %}
+                        {# Utilisateur gratuit #}
+                        <span class="quota-badge {% if remaining == 0 %}quota-badge-expired{% endif %}">
+                            {{ remaining }} / {{ limit }} devis gratuits restants aujourd'hui
+                        </span>
+                    {% endif %}
+                {% else %}
+                    <span class="quota-badge">
+                        Connectez-vous pour créer un devis
+                    </span>
+                {% endif %}
             </div>
         </div>
 
@@ -274,6 +297,28 @@
 
         .form-note a:hover {
             text-decoration: underline;
+        }
+
+        /* Badges de quota avec couleurs différentes */
+        .quota-badge {
+            background: #10B981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .quota-badge-pro {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+        }
+
+        .quota-badge-pack {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        }
+
+        .quota-badge-expired {
+            background: #EF4444;
         }
     </style>
 {% endblock %}
